@@ -77,6 +77,7 @@ namespace EffectPacks
                 case "takebananas":
                     {
                         var (success, message) = ChangeWord(request, 0x7e052b, 0, 0, 100, false, "took your bananas");
+                        Connector?.WriteByte(0x7e052f, 0xff); /* Bring the counter on-screen */
                         Respond(request, success, message);
                         return;
                     }
