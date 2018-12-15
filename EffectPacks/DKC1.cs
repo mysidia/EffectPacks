@@ -17,7 +17,9 @@ namespace EffectPacks
         public DKC1([NotNull] IPlayer player, [NotNull] Func<CrowdControlBlock, bool> responseHandler, [NotNull] Action<object> statusUpdateHandler) : base(responseHandler, statusUpdateHandler) => _player = player;
         public override List<Effect> Effects => new List<Effect>(new[]
         {
-            new Effect("Shake", "shake", 10)
+            new Effect("Shake", "shake", 10),
+            new Effect("Take Bananas", "takebananas", 1),
+            new Effect("Send extra life", "extralife", 1)
         });
 
         public override List<(string, Action)> MenuActions
@@ -39,8 +41,29 @@ namespace EffectPacks
 
         protected override void StartEffect(EffectRequest request)
         {
+            /*switch(Connector.ReadByte?(0x7e003e))
+            {
+                default:
+                    DelayEffect(request, TimeSpan.FromSeconds(10));
+                    return;
+            }*/
             switch (request.InventoryItem.BaseItem.Code)
             {
+                case "extralife":
+                    {
+                        var (success, message) = SimpleIncrement(request, 0x7e0575, 99,  "");
+
+                        if (success ?? false)
+                        {
+                            (success, message) = SimpleIncrement(request, 0x7e0578, 99, "sent you an extra life");
+
+                            Respond(request, success, message);
+                        } else
+                        {
+                            Respond(request, false, "could not send extra life");
+                        }
+                        return;
+                    }
                 case "shake":
                     {
                         //byte? g = Connector.ReadByte(0x009bf3);
@@ -49,6 +72,12 @@ namespace EffectPacks
                         success &= Connector?.WriteByte(0x7e1b0c,0xf0) ?? false;
 
                         Respond(request, success ?? false);
+                        return;
+                    }
+                case "takebananas":
+                    {
+                        var (success, message) = ChangeWord(request, 0x7e052b, 0, 0, 100, false, "took your bananas");
+                        Respond(request, success, message);
                         return;
                     }
             }
