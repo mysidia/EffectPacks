@@ -229,56 +229,16 @@ namespace EffectPacks
         {
             byte[] levelTypeMap = new byte[]
             {
-                LevelType.Outdoor,  //00
-                LevelType.Outdoor,  //01
-                LevelType.Indoor, //02
-                LevelType.Indoor, //03
-                LevelType.Indoor, //04
-                LevelType.Indoor,
-                LevelType.Indoor,
-                LevelType.Outdoor,
-                LevelType.Outdoor, //08
-                LevelType.Outdoor,
-                LevelType.Indoor, //0A
-                LevelType.Outdoor,
-                LevelType.Outdoor,
-                LevelType.Outdoor, //0d
-                LevelType.Outdoor,
-                LevelType.Outdoor, //0f
-                LevelType.Outdoor,
-                LevelType.Indoor,
-                LevelType.Outdoor, //12
-                LevelType.Indoor,
-                LevelType.Indoor,
-                LevelType.Outdoor, //15
-                LevelType.Outdoor,
-                LevelType.Outdoor,
-                LevelType.Indoor,
-                LevelType.Outdoor, //19
-                LevelType.Indoor,
-                LevelType.Indoor,
-                LevelType.Indoor, //1C
-                LevelType.Outdoor,
-                LevelType.Indoor,
-                LevelType.Indoor, //1F
-                LevelType.Indoor, //20
-                LevelType.Indoor,
-                LevelType.Water, //22
-                LevelType.Indoor,
-                LevelType.Outdoor,
-                LevelType.Outdoor,
-                LevelType.Outdoor,
-                LevelType.Indoor,
-                LevelType.Outdoor,
-                LevelType.Indoor,
-                LevelType.Water, //2A
-                LevelType.Outdoor,
-                LevelType.Outdoor,
-                LevelType.Indoor,
-                LevelType.Indoor,
-                LevelType.Indoor,
-                LevelType.Indoor, //30
-                LevelType.Indoor,
+                LevelType.Outdoor, LevelType.Outdoor,  LevelType.Indoor,  LevelType.Indoor, LevelType.Indoor, //00 - 04
+                LevelType.Indoor,  LevelType.Indoor,   LevelType.Outdoor, LevelType.Outdoor, LevelType.Outdoor, //05 - 09
+                LevelType.Indoor,  LevelType.Outdoor,  LevelType.Outdoor, LevelType.Outdoor, LevelType.Outdoor, //0a - 0e
+                LevelType.Outdoor, LevelType.Outdoor,  LevelType.Indoor,  LevelType.Outdoor, LevelType.Indoor, //0f - 13
+                LevelType.Indoor,  LevelType.Outdoor,  LevelType.Outdoor, LevelType.Outdoor, LevelType.Indoor, //14 - 18
+                LevelType.Outdoor, LevelType.Indoor,   LevelType.Indoor,  LevelType.Indoor,  LevelType.Outdoor, //19 - 1d
+                LevelType.Indoor,  LevelType.Indoor,   LevelType.Indoor,  LevelType.Indoor,  LevelType.Water,  // 1e - 22
+                LevelType.Indoor,  LevelType.Outdoor,  LevelType.Outdoor, LevelType.Outdoor, LevelType.Indoor, // 23 - 27
+                LevelType.Outdoor, LevelType.Indoor,   LevelType.Water,   LevelType.Outdoor, LevelType.Outdoor, // 28 - 2c
+                LevelType.Indoor,  LevelType.Indoor,   LevelType.Indoor,  LevelType.Indoor,  LevelType.Indoor, // 2d - 31
                 LevelType.Indoor,
                 LevelType.Indoor,
                 LevelType.Indoor,
