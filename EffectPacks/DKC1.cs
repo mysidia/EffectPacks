@@ -119,7 +119,8 @@ namespace EffectPacks
                 case "takebananas":
                     {
                         // Steal all their bananas
-                        var (success, message) = ChangeWord(request, 0x7e052b, 0, 0, 100, false, "took your bananas");
+                        // $052B is the decimal ones-digit,  $052C is the tens digit
+                        var (success, message) = ChangeWord(request, 0x7e052b, 0, 0,1, true, "took your bananas");
 
                         // Try to bring the banana counter on screen, so the player will see
                         Connector?.WriteByte(0x7e0530, 0x01);
