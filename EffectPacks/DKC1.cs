@@ -14,6 +14,12 @@ namespace EffectPacks
     {
         [NotNull] private readonly IPlayer _player;
 
+        // This requires updating
+
+        public override Game Game { get; }
+            = new Game(0, "Game name Goes Here");
+
+
         public DKC1([NotNull] IPlayer player, [NotNull] Func<CrowdControlBlock, bool> responseHandler, [NotNull] Action<object> statusUpdateHandler) : base(responseHandler, statusUpdateHandler) => _player = player;
         public override List<Effect> Effects => new List<Effect>(new[]
         {
@@ -30,8 +36,6 @@ namespace EffectPacks
                 return result;
             }
         }
-
-        public override Game Game { get; } = new Game(0, "D");
 
         protected override void RequestData(DataRequest request)
         {
