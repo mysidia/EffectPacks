@@ -10,7 +10,7 @@ using System.Windows.Forms;
 
 namespace EffectPacks
 {
-    class DKC1: SNESEffectPack
+    class DKC1 : SNESEffectPack
     {
         [NotNull] private readonly IPlayer _player;
 
@@ -49,20 +49,44 @@ namespace EffectPacks
         {
             byte? checkByte1 = Connector.ReadByte(0x7e004b);
             byte? playState = Connector.ReadByte(0x7e0579);
-            bool gameIsPaused = ((playState ?? 0x0) & 0x40) != 0;  
+            bool gameIsPaused = ((playState ?? 0x0) & 0x40) != 0;
 
-            if ( checkByte1 == null || playState == null || 
-                 checkByte1.Equals(0x0) || gameIsPaused )
+            if (checkByte1 == null || playState == null ||
+                 checkByte1.Equals(0x0) || gameIsPaused)
             {
 
-                    DelayEffect(request, TimeSpan.FromSeconds(10));
-                    return;
+                DelayEffect(request, TimeSpan.FromSeconds(10));
+                return;
             }
 
             if (request.InventoryItem.BaseItem.Code.Equals("darkness"))
             {
                 /* Make sure its not already dark */
-                if ( (Connector?.ReadByte(0x7e051a) ?? 1) != 0x0f )
+                if ((Connector?.ReadByte(0x7e051a) ?? 1) != 0x0f)
+                {
+                    DelayEffect(request, TimeSpan.FromSeconds(60));
+                    return;
+                }
+            }
+
+            //
+            // Delay effects that don't work in a swimming level
+            //
+            if (request.InventoryItem.BaseItem.Code.Equals("shake") ||
+                request.InventoryItem.BaseItem.Code.Equals("lift"))
+            {
+                byte? levelByte = Connector?.ReadByte(0x7e003e);
+
+                if (levelByte != null)
+                {
+                    int? entryType = Connector?.ReadWord((uint)0x3ffd60 + (uint)((levelByte ?? 0) << 1) );
+
+                    if (entryType == null || entryType == 8915)
+                    {
+                        DelayEffect(request, TimeSpan.FromSeconds(60));
+                        return;
+                    }
+                } else
                 {
                     DelayEffect(request, TimeSpan.FromSeconds(60));
                     return;
@@ -77,13 +101,13 @@ namespace EffectPacks
                         // Grant an extra life;
                         // Player lives are 2-bytes starting at $0575
                         // There is another copy of the variable at $0578
-                        var (success, message) = SimpleIncrement(request, 0x7e0575, 99,  "sent you an extra life");
+                        var (success, message) = SimpleIncrement(request, 0x7e0575, 99, "sent you an extra life");
 
                         if (success != false)
                         {
-                            byte[] mbuffer = new byte [2];
+                            byte[] mbuffer = new byte[2];
 
-                            if ( Connector?.ReadBytes(0x7e0575,mbuffer) ?? false )
+                            if (Connector?.ReadBytes(0x7e0575, mbuffer) ?? false)
                             {
                                 Connector.WriteBytes(0x7e0577, mbuffer);
                             } /* else    - It seems this copy is non-essential.
@@ -101,10 +125,11 @@ namespace EffectPacks
                     }
                 case "lift":
                     {
-                        if ( Connector?.WriteBytes(0x7e0bc3, new byte[] { 0x0f, 0x04, 0x0f, 0x04 }) ?? false )
+                        if (Connector?.WriteBytes(0x7e0bc3, new byte[] { 0x0f, 0x04, 0x0f, 0x04 }) ?? false)
                         {
                             Respond(request, true, "gave you a lift");
-                        } else
+                        }
+                        else
                         {
                             Respond(request, true, "failed to give you a lift");
                         }
@@ -116,7 +141,7 @@ namespace EffectPacks
                         //byte? g = Connector.ReadByte(0x009bf3);
                         //System.Windows.Forms.MessageBox.Show("[" + g.ToString() + "]");
                         var (success, message) = StartTimed(request, 0x7e1b0d, 0x3f, TimeSpan.FromMinutes(1), "started a shake");
-                        success &= Connector?.WriteByte(0x7e1b0c,0xf0) ?? false;
+                        success &= Connector?.WriteByte(0x7e1b0c, 0xf0) ?? false;
 
                         Respond(request, success ?? false, message);
                         return;
@@ -131,7 +156,7 @@ namespace EffectPacks
                     {
                         // Steal all their bananas
                         // $052B is the decimal ones-digit,  $052C is the tens digit
-                        var (success, message) = ChangeWord(request, 0x7e052b, 0, 0,1, true, "took your bananas");
+                        var (success, message) = ChangeWord(request, 0x7e052b, 0, 0, 1, true, "took your bananas");
 
                         // Try to bring the banana counter on screen, so the player will see
                         Connector?.WriteByte(0x7e0530, 0x01);
@@ -192,5 +217,102 @@ namespace EffectPacks
                 return success;
             }
         }
+
+/*        private enum LevelType
+        {
+            Outdoor = 1,
+            Indoor = 2,
+            Water = 3
+        };
+
+        LevelType GetLevelType(int levelid)
+        {
+            byte[] levelTypeMap = new byte[]
+            {
+                LevelType.Outdoor,  //00
+                LevelType.Outdoor,  //01
+                LevelType.Indoor, //02
+                LevelType.Indoor, //03
+                LevelType.Indoor, //04
+                LevelType.Indoor,
+                LevelType.Indoor,
+                LevelType.Outdoor,
+                LevelType.Outdoor, //08
+                LevelType.Outdoor,
+                LevelType.Indoor, //0A
+                LevelType.Outdoor,
+                LevelType.Outdoor,
+                LevelType.Outdoor, //0d
+                LevelType.Outdoor,
+                LevelType.Outdoor, //0f
+                LevelType.Outdoor,
+                LevelType.Indoor,
+                LevelType.Outdoor, //12
+                LevelType.Indoor,
+                LevelType.Indoor,
+                LevelType.Outdoor, //15
+                LevelType.Outdoor,
+                LevelType.Outdoor,
+                LevelType.Indoor,
+                LevelType.Outdoor, //19
+                LevelType.Indoor,
+                LevelType.Indoor,
+                LevelType.Indoor, //1C
+                LevelType.Outdoor,
+                LevelType.Indoor,
+                LevelType.Indoor, //1F
+                LevelType.Indoor, //20
+                LevelType.Indoor,
+                LevelType.Water, //22
+                LevelType.Indoor,
+                LevelType.Outdoor,
+                LevelType.Outdoor,
+                LevelType.Outdoor,
+                LevelType.Indoor,
+                LevelType.Outdoor,
+                LevelType.Indoor,
+                LevelType.Water, //2A
+                LevelType.Outdoor,
+                LevelType.Outdoor,
+                LevelType.Indoor,
+                LevelType.Indoor,
+                LevelType.Indoor,
+                LevelType.Indoor, //30
+                LevelType.Indoor,
+                LevelType.Indoor,
+                LevelType.Indoor,
+                LevelType.Indoor,
+                LevelType.Outdoor,
+                LevelType.Indoor,
+                LevelType.Indoor,
+                LevelType.Indoor,
+                LevelType.Indoor,  //39
+                LevelType.Indoor,   //3A
+                LevelType.Indoor,
+                LevelType.Indoor,
+                LevelType.Indoor,
+                LevelType.Outdoor, //3E
+                LevelType.Outdoor, //3F
+                LevelType.Outdoor, //40
+                LevelType.Indoor,
+                LevelType.Outdoor,
+                LevelType.Outdoor,
+                LevelType.Indoor,
+                LevelType.Indoor,
+                LevelType.Indoor, //46
+                LevelType.Indoor,
+                LevelType.Indoor,
+                LevelType.Indoor,
+                LevelType.Indoor, //4A
+                LevelType.Indoor,
+                LevelType.Indoor,
+                LevelType.Indoor,
+                LevelType.Indoor,
+                LevelType.Indoor, //4F
+                LevelType.Indoor,
+
+            }
+        }*/
+
     }
 }
