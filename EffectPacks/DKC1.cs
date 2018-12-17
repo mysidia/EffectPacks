@@ -63,17 +63,25 @@ namespace EffectPacks
                 case "extralife":
                     {
                         // Grant an extra life;
-                        // Player lives are 2-bytes starting at $0578
-                        // There is another copy of the variable at $0575, so we need to 
-                        // increment both locations.
-                        var (success, message) = SimpleIncrement(request, 0x7e0575, 99,  "");
+                        // Player lives are 2-bytes starting at $0575
+                        // There is another copy of the variable at $0578
+                        var (success, message) = SimpleIncrement(request, 0x7e0575, 99,  "sent you an extra life");
 
                         if (success != false)
                         {
-                            (success, message) = SimpleIncrement(request, 0x7e0578, 99, "sent you an extra life");
+                            byte[] mbuffer = new byte [2];
 
+                            if ( Connector?.ReadBytes(0x7e0575,mbuffer) ?? false )
+                            {
+                                Connector.WriteBytes(0x7e0577, mbuffer);
+                            } /* else    - It seems this copy is non-essential.
+                            {
+                                success = false;
+                                Respond(request, false, "could not send extra life");
+                            }*/
                             Respond(request, success, message);
-                        } else
+                        }
+                        else
                         {
                             Respond(request, false, "could not send extra life");
                         }
