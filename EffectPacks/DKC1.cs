@@ -222,55 +222,42 @@ namespace EffectPacks
         {
             Outdoor = 1,
             Indoor = 2,
-            Water = 3
+            Water = 3,
+            Unknown
         };
 
         LevelType GetLevelType(int levelid)
         {
             byte[] levelTypeMap = new byte[]
             {
-                LevelType.Outdoor, LevelType.Outdoor,  LevelType.Indoor,  LevelType.Indoor, LevelType.Indoor, //00 - 04
-                LevelType.Indoor,  LevelType.Indoor,   LevelType.Outdoor, LevelType.Outdoor, LevelType.Outdoor, //05 - 09
-                LevelType.Indoor,  LevelType.Outdoor,  LevelType.Outdoor, LevelType.Outdoor, LevelType.Outdoor, //0a - 0e
-                LevelType.Outdoor, LevelType.Outdoor,  LevelType.Indoor,  LevelType.Outdoor, LevelType.Indoor, //0f - 13
-                LevelType.Indoor,  LevelType.Outdoor,  LevelType.Outdoor, LevelType.Outdoor, LevelType.Indoor, //14 - 18
-                LevelType.Outdoor, LevelType.Indoor,   LevelType.Indoor,  LevelType.Indoor,  LevelType.Outdoor, //19 - 1d
-                LevelType.Indoor,  LevelType.Indoor,   LevelType.Indoor,  LevelType.Indoor,  LevelType.Water,  // 1e - 22
-                LevelType.Indoor,  LevelType.Outdoor,  LevelType.Outdoor, LevelType.Outdoor, LevelType.Indoor, // 23 - 27
-                LevelType.Outdoor, LevelType.Indoor,   LevelType.Water,   LevelType.Outdoor, LevelType.Outdoor, // 28 - 2c
-                LevelType.Indoor,  LevelType.Indoor,   LevelType.Indoor,  LevelType.Indoor,  LevelType.Indoor, // 2d - 31
-                LevelType.Indoor,
-                LevelType.Indoor,
-                LevelType.Indoor,
-                LevelType.Outdoor,
-                LevelType.Indoor,
-                LevelType.Indoor,
-                LevelType.Indoor,
-                LevelType.Indoor,  //39
-                LevelType.Indoor,   //3A
-                LevelType.Indoor,
-                LevelType.Indoor,
-                LevelType.Indoor,
-                LevelType.Outdoor, //3E
-                LevelType.Outdoor, //3F
-                LevelType.Outdoor, //40
-                LevelType.Indoor,
-                LevelType.Outdoor,
-                LevelType.Outdoor,
-                LevelType.Indoor,
-                LevelType.Indoor,
-                LevelType.Indoor, //46
-                LevelType.Indoor,
-                LevelType.Indoor,
-                LevelType.Indoor,
-                LevelType.Indoor, //4A
-                LevelType.Indoor,
-                LevelType.Indoor,
-                LevelType.Indoor,
-                LevelType.Indoor,
-                LevelType.Indoor, //4F
-                LevelType.Indoor,
+                LevelType.Outdoor, LevelType.Outdoor,  LevelType.Indoor,  LevelType.Indoor,  // 00 - 03 
+                LevelType.Indoor,  LevelType.Indoor,   LevelType.Indoor,  LevelType.Outdoor, // 04 - 07
+                LevelType.Outdoor, LevelType.Outdoor,  LevelType.Indoor,  LevelType.Outdoor, // 08 - 0b
+                LevelType.Outdoor, LevelType.Outdoor,  LevelType.Outdoor, LevelType.Outdoor, // 0c - 0f
+                LevelType.Outdoor, LevelType.Indoor,   LevelType.Outdoor, LevelType.Indoor,  // 10 - 13
+                LevelType.Indoor,  LevelType.Outdoor,  LevelType.Outdoor, LevelType.Outdoor, // 14 - 17
+                LevelType.Indoor,  LevelType.Outdoor,  LevelType.Indoor,  LevelType.Indoor,  // 18 - 1B
+                LevelType.Indoor,  LevelType.Outdoor,  LevelType.Indoor,  LevelType.Indoor,  // 1C - 1F
+                LevelType.Indoor,  LevelType.Indoor,   LevelType.Water,   LevelType.Indoor,  // 20 - 23
+                LevelType.Outdoor, LevelType.Outdoor,  LevelType.Outdoor, LevelType.Indoor,  // 24 - 27
+                LevelType.Outdoor, LevelType.Indoor,   LevelType.Water,   LevelType.Outdoor, // 28 - 2B
+                LevelType.Outdoor, LevelType.Indoor,   LevelType.Indoor,  LevelType.Indoor,  // 2C - 2F
+                LevelType.Indoor,  LevelType.Indoor,   LevelType.Indoor,  LevelType.Indoor,  // 30 - 33
+                LevelType.Indoor,  LevelType.Outdoor,  LevelType.Indoor,  LevelType.Indoor,  // 34 - 37
+                LevelType.Indoor,  LevelType.Indoor,   LevelType.Indoor,  LevelType.Indoor,  // 38 - 3B
+                LevelType.Indoor,  LevelType.Indoor,   LevelType.Outdoor, LevelType.Outdoor, // 3C - 3F
+                LevelType.Outdoor, LevelType.Indoor,   LevelType.Outdoor, LevelType.Outdoor, // 40 - 43
+                LevelType.Indoor,  LevelType.Indoor,   LevelType.Indoor,  LevelType.Indoor,  // 44 - 47
+                LevelType.Indoor,  LevelType.Indoor,   LevelType.Indoor,  LevelType.Indoor,  // 48 - 4B
+                LevelType.Indoor,  LevelType.Indoor,   LevelType.Indoor,  LevelType.Indoor,  // 4C - 4F
+                LevelType.Indoor, // 50 - 53
 
+            };
+            
+            try {
+                 return levelTypeMap[levelid];
+            } catch {
+                 return LevelType.Unknown;
             }
         }*/
 
