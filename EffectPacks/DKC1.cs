@@ -95,7 +95,7 @@ namespace EffectPacks
                         var (success, message) = ChangeWord(request, 0x7e052b, 0, 0, 100, false, "took your bananas");
 
                         // Try to bring the banana counter on screen, so the player will see
-                        Connector?.WriteByte(0x7e052f, 0xff);
+                        Connector?.WriteByte(0x7e0503, 0x01);
                         Respond(request, success, message);
                         return;
                     }
