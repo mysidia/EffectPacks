@@ -25,7 +25,8 @@ namespace EffectPacks
         {
             new Effect("Shake", "shake", 10),
             new Effect("Take Bananas", "takebananas", 1),
-            new Effect("Send extra life", "extralife", 1)
+            new Effect("Send extra life", "extralife", 1),
+            new Effect("Darkness", "darkness", 1)
         });
 
         public override List<(string, Action)> MenuActions
@@ -86,7 +87,13 @@ namespace EffectPacks
                         var (success, message) = StartTimed(request, 0x7e1b0d, 0x3f, TimeSpan.FromMinutes(1), "started a shake");
                         success &= Connector?.WriteByte(0x7e1b0c,0xf0) ?? false;
 
-                        Respond(request, success ?? false);
+                        Respond(request, success ?? false, message);
+                        return;
+                    }
+                case "darkness":
+                    {
+                        var (success, message) = StartTimed(request, 0x7e051b, 0xff, TimeSpan.FromSeconds(28), "cast a darkness spell");
+                        Respond(request, success ?? false, message);
                         return;
                     }
                 case "takebananas":
@@ -111,13 +118,24 @@ namespace EffectPacks
                         bool result = Connector?.WriteBytes(0x7e1b0c, new byte[] { 0x00, 0x00 }) ?? false;//
                         //Connector?.WriteByte(0x809bf3, 0xb) ?? false;
 
-                        if ( result )
+                        if (result)
                         {
                             Connector?.SendMessage($"{request.DisplayViewer}'s shake has ended.");
                         }
                         return result;
                     }
+
+                case "darkness":
+                    {
+                        bool result = Connector?.WriteBytes(0x7e051b, 0x7f) ?? false;//
+                        if (result)
+                        {
+                            Connector?.SendMessage($"{request.DisplayViewer}'s darkness spell has ended.");
+                        }
+                        return DialogResult;
+                    }
             }
+
             return false;
         }
 
@@ -131,7 +149,9 @@ namespace EffectPacks
                 try
                 {
                     //success &= Connector?.WriteByte(0x809bf3, 0x0b) ?? false;
-                    success &= Connector?.WriteBytes(0x7e1b0c, new byte[] { 0x00, 0x00 }) ?? false;//
+
+                    success &= Connector?.WriteBytes(0x7e1b0c, new byte[] { 0x00, 0x00 }) ?? false;
+                    success &= Connector?.WriteByte(0x7e051b, 0x7f) ?? false;//
                 }
                 catch
                 {
