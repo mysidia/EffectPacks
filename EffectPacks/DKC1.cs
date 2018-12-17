@@ -41,19 +41,25 @@ namespace EffectPacks
 
         protected override void StartEffect(EffectRequest request)
         {
-            /*switch(Connector.ReadByte?(0x7e003e))
+            byte? checkByte1 = Connector.ReadByte(0x7e004b);
+            byte? playState = Connector.ReadByte(0x7e0579);
+            bool gameIsPaused = ((playState ?? 0x0) & 0x40) != 0;  
+
+            if ( checkByte1 == null || playState == null || 
+                 checkByte1.Equals(0x0) || gameIsPaused )
             {
-                default:
+
                     DelayEffect(request, TimeSpan.FromSeconds(10));
                     return;
-            }*/
+            }
+
             switch (request.InventoryItem.BaseItem.Code)
             {
                 case "extralife":
                     {
                         var (success, message) = SimpleIncrement(request, 0x7e0575, 99,  "");
 
-                        if (success ?? false)
+                        if (success != false)
                         {
                             (success, message) = SimpleIncrement(request, 0x7e0578, 99, "sent you an extra life");
 
