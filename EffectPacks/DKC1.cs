@@ -26,7 +26,7 @@ namespace EffectPacks
             new Effect("Shake (1 minute)", "shake", 10),
             new Effect("Take Bananas", "takebananas", 1),
             new Effect("Send extra life", "extralife", 1),
-            new Effect("Darkness (30 seconds)", "darkness", 1),
+            new Effect("Darkness (26 seconds)", "darkness", 1),
             new Effect("Lift", "lift", 1)
         });
 
@@ -58,6 +58,17 @@ namespace EffectPacks
                     DelayEffect(request, TimeSpan.FromSeconds(10));
                     return;
             }
+
+            if (request.InventoryItem.BaseItem.Code.Equals("darkness"))
+            {
+                /* Make sure its not already dark */
+                if ( (Connector?.ReadByte(0x7e051a) ?? 1) != 0x0f )
+                {
+                    DelayEffect(request, TimeSpan.FromSeconds(60));
+                    return;
+                }
+            }
+
 
             switch (request.InventoryItem.BaseItem.Code)
             {
@@ -112,7 +123,7 @@ namespace EffectPacks
                     }
                 case "darkness":
                     {
-                        var (success, message) = StartTimed(request, 0x7e051b, 0xff, TimeSpan.FromSeconds(28), "cast a darkness spell");
+                        var (success, message) = StartTimed(request, 0x7e051b, 0xff, TimeSpan.FromSeconds(26), "cast a darkness spell");
                         Respond(request, success ?? false, message);
                         return;
                     }
