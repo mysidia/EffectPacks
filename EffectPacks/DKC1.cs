@@ -61,6 +61,10 @@ namespace EffectPacks
             {
                 case "extralife":
                     {
+                        // Grant an extra life;
+                        // Player lives are 2-bytes starting at $0578
+                        // There is another copy of the variable at $0575, so we need to 
+                        // increment both locations.
                         var (success, message) = SimpleIncrement(request, 0x7e0575, 99,  "");
 
                         if (success != false)
@@ -76,6 +80,7 @@ namespace EffectPacks
                     }
                 case "shake":
                     {
+                        // Let's make the ground start shaking
                         //byte? g = Connector.ReadByte(0x009bf3);
                         //System.Windows.Forms.MessageBox.Show("[" + g.ToString() + "]");
                         var (success, message) = StartTimed(request, 0x7e1b0d, 0x3f, TimeSpan.FromMinutes(1), "started a shake");
@@ -86,8 +91,11 @@ namespace EffectPacks
                     }
                 case "takebananas":
                     {
+                        // Steal all their bananas
                         var (success, message) = ChangeWord(request, 0x7e052b, 0, 0, 100, false, "took your bananas");
-                        Connector?.WriteByte(0x7e052f, 0xff); /* Bring the counter on-screen */
+
+                        // Try to bring the banana counter on screen, so the player will see
+                        Connector?.WriteByte(0x7e052f, 0xff);
                         Respond(request, success, message);
                         return;
                     }
