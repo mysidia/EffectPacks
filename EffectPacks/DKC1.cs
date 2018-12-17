@@ -81,7 +81,7 @@ namespace EffectPacks
                 {
                     int? entryType = Connector?.ReadWord((uint)0x3ffd60 + (uint)((levelByte ?? 0) << 1) );
 
-                    if (entryType == null || entryType == 8915)
+                    if (entryType == null || entryType == 0x8915)
                     {
                         DelayEffect(request, TimeSpan.FromSeconds(60));
                         return;
