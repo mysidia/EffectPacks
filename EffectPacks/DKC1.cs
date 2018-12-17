@@ -23,10 +23,10 @@ namespace EffectPacks
         public DKC1([NotNull] IPlayer player, [NotNull] Func<CrowdControlBlock, bool> responseHandler, [NotNull] Action<object> statusUpdateHandler) : base(responseHandler, statusUpdateHandler) => _player = player;
         public override List<Effect> Effects => new List<Effect>(new[]
         {
-            new Effect("Shake", "shake", 10),
+            new Effect("Shake (1 minute)", "shake", 10),
             new Effect("Take Bananas", "takebananas", 1),
             new Effect("Send extra life", "extralife", 1),
-            new Effect("Darkness", "darkness", 1)
+            new Effect("Darkness (30 seconds)", "darkness", 1)
         });
 
         public override List<(string, Action)> MenuActions
@@ -127,12 +127,12 @@ namespace EffectPacks
 
                 case "darkness":
                     {
-                        bool result = Connector?.WriteBytes(0x7e051b, 0x7f) ?? false;//
+                        bool result = Connector?.WriteByte(0x7e051b, 0x7f) ?? false;//
                         if (result)
                         {
                             Connector?.SendMessage($"{request.DisplayViewer}'s darkness spell has ended.");
                         }
-                        return DialogResult;
+                        return result;
                     }
             }
 
