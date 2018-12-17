@@ -26,7 +26,8 @@ namespace EffectPacks
             new Effect("Shake (1 minute)", "shake", 10),
             new Effect("Take Bananas", "takebananas", 1),
             new Effect("Send extra life", "extralife", 1),
-            new Effect("Darkness (30 seconds)", "darkness", 1)
+            new Effect("Darkness (30 seconds)", "darkness", 1),
+            new Effect("Lift", "lift", 1)
         });
 
         public override List<(string, Action)> MenuActions
@@ -84,6 +85,17 @@ namespace EffectPacks
                         else
                         {
                             Respond(request, false, "could not send extra life");
+                        }
+                        return;
+                    }
+                case "lift":
+                    {
+                        if ( Connector?.WriteBytes(0x7e0bc3, new byte[] { 0x0f, 0x04, 0x0f, 0x04 }) ?? false )
+                        {
+                            Respond(request, true, "gave you a lift");
+                        } else
+                        {
+                            Respond(request, true, "failed to give you a lift");
                         }
                         return;
                     }
