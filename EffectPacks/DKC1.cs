@@ -319,11 +319,11 @@ Custom ASM to provide control of Joypad 1 Inputs
 0081:7F90 AF04707E 4D0005 0c0270
 0081:79FA AF06707E 2d0005 4A 0c0270
 0081:7FA5 AF08707E 2d0005 0a 0c0270
-0081:7Fb0 AF10707E 2d0005 4a 0c0270 af12707e 2d
-0081:7fc0 0005 0a 0c0270 af14707e 2d0005 0c0270
+0081:7Fb0 AF0A707E 2d0005 4a 0c0270 af0c707e 2d
+0081:7fc0 0005 0a 0c0270 af0e707e 2d0005 0c0270
 0081:7fd0 ad0270 8d0005 6b a90000 8f04707e 8f06
-0081:7fe0 707e8f 08707e 8f10707e 8f12707e a9ffff
-0081:7ff1 8f14707e 6b  <- Ends at address 0081:7ff6
+0081:7fe0 707e8f 08707e 8f0a707e 8f0c707e a9ffff
+0081:7ff1 8f0e707e 6b  <- Ends at address 0081:7ff6
 
                 lda $7e7000
 		cmp #1A1A
@@ -340,15 +340,15 @@ Custom ASM to provide control of Joypad 1 Inputs
 		and $0500
 		asl
 		tsb $7002
-		lda $7e7010 ; was lda #0000
+		lda $7e700a ; was lda #0000
 		and $0500
 		lsr
                 tsb $7002
-		lda $7e7012 ; was lda #0000
+		lda $7e700c ; was lda #0000
 		and $0500
 		asl
 		tsb $7002
-		lda $7e7014  ; was lda #c00f
+		lda $7e700e  ; was lda #c00f
 		and $0500
 		tsb $7002
 		lda $7002
