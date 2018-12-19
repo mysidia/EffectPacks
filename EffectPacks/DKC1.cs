@@ -302,7 +302,6 @@ namespace EffectPacks
 
     }
 }
-
 /*
 0080:a28e original instruction is: txa
 0080:a28f original instruction is: sta 0502  
@@ -310,34 +309,46 @@ namespace EffectPacks
 
 0081:7F80  through 0081:****
 
-
-
-0081:7F80 change to [8A] - txa
+at 0081:7F80 change to [8A] - txa
         [8D 02 05]  -  sta 0502 
-		lda $7000
-		cmp #0001
+
+Custom ASM to provide control of Joypad 1 Inputs
+
+0081:7F80 8A8D0205AF00707EC91A1A
+0081:7F8B D04A9C0270
+0081:7F90 AF04707E 4D0005 0c0270
+0081:79FA AF06707E 2d0005 4A 0c0270
+0081:7FA5 AF08707E 2d0005 0a 0c0270
+0081:7Fb0 AF10707E 2d0005 4a 0c0270 af12707e 2d
+0081:7fc0 0005 0a 0c0270 af14707e 2d0005 0c0270
+0081:7fd0 ad0270 8d0005 6b a90000 8f04707e 8f06
+0081:7fe0 707e8f 08707e 8f10707e 8f12707e a9ffff
+0081:7ff1 8f14707e 6b  <- Ends at address 0081:7ff6
+
+                lda $7e7000
+		cmp #1A1A
 		bne 7fd0  ; <= bne .skip_1  
 		stz $7002
-		lda $7004 ; was lda #0000
-        eor $0500
-		tsb $7002								
-		lda $7006 ;was lda #2aa0
-		and $0500
-		lsr
-		tsb $7002
-		lda $7008 ; was lda #d550
+		lda $7e7004 ; was lda #0000
+                eor $0500
+		tsb $7002	; 0c 02 70							
+		lda $7e7006 ; af06707e  //was lda #2aa0
+		and $0500    ; 2d0005
+		lsr ; 4a
+		tsb $7002 ; 2d0005
+		lda $7008 ; //was lda #d550
 		and $0500
 		asl
 		tsb $7002
-		lda $7010 ; was lda #0000
+		lda $7e7010 ; was lda #0000
 		and $0500
 		lsr
                 tsb $7002
-		lda $7012 ; was lda #0000
+		lda $7e7012 ; was lda #0000
 		and $0500
 		asl
 		tsb $7002
-		lda #c00f
+		lda $7e7014  ; was lda #c00f
 		and $0500
 		tsb $7002
 		lda $7002
@@ -345,15 +356,21 @@ namespace EffectPacks
 		rtl
 .skip_1 
         lda #0000
-        sta $7004
-        lda #2aa0
-        sta $7006
-		lda #d550
-		sta $7008
-		lda #0000
-		sta $7010
-		lda #0000
-		sta $7012
+        sta $7e7004
+	sta $7e7006
+	sta $7e7008
+	sta $7e7010
+	sta $7e7012
+	lda #ffff
+	sta $7e7014
+        ;lda #2aa0
+        ;sta $7006
+	;	lda #d550
+	;	sta $7008
+	;	lda #0000
+	;	sta $7010
+	;	lda #0000
+	;	sta $7012
 		rtl
 		
 		
