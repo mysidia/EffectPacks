@@ -263,3 +263,52 @@ namespace EffectPacks
 
     }
 }
+
+/*
+0080:a28e original instruction is: txa
+0080:a28f original instruction is: sta 0502  
+    change 0080:a28e [22 80 7f 81]    ( jsl 817f80  )
+    
+0081:7F80 change to [8A] - txa
+        [8D 02 05]  -  sta 0502 
+		lda #7000
+		cmp #0
+		bne .skip_1  
+		stz $7002
+		lda $7004 ; lda #0000
+        eor $0500
+		tsb $7002								
+		lda $7006 ;lda #2aa0
+		and $0500
+		lsr
+		tsb $7002
+		lda $7008 ; lda #d550
+		and $0500
+		asl
+		tsb $7002
+		lda $7010 ; lda #0000
+		and $0500
+		lsr
+        tsb $7002
+		lda $7012 ; lda #0000
+		and $0500
+		asl
+		tsb $7002
+		lda #c00f
+		and $0500
+		tsb $7002
+		lda $7002
+		sta $0500
+		rtl
+.skip_1 
+        lda #0000
+        sta $7004
+        lda #2aa0
+        sta $7006
+		lda #d550
+		sta $7008
+		lda #0000
+		sta $7010
+		lda #0000
+		sta $7012
+*/
