@@ -221,37 +221,75 @@ namespace EffectPacks
 /*        private enum LevelType
         {
             Outdoor = 1,
-            Indoor = 2,
-            Water = 3,
-            Unknown
+            Indoor = 2,   // Indoor, certain affects might be useless
+            Water = 3,    // Water,  certain affects don't work
+	    Bonus = 4,   
+            Unknown = 5
         };
 
         LevelType GetLevelType(int levelid)
         {
             byte[] levelTypeMap = new byte[]
             {
-                LevelType.Outdoor, LevelType.Outdoor,  LevelType.Indoor,  LevelType.Indoor,  // 00 - 03 
-                LevelType.Indoor,  LevelType.Indoor,   LevelType.Indoor,  LevelType.Outdoor, // 04 - 07
+                LevelType.Outdoor, LevelType.Outdoor,  LevelType.Bonus,   LevelType.Indoor,  // 00 - 03 
+                LevelType.Bonus,   LevelType.Bonus,    LevelType.Bonus,   LevelType.Outdoor, // 04 - 07
                 LevelType.Outdoor, LevelType.Outdoor,  LevelType.Indoor,  LevelType.Outdoor, // 08 - 0b
                 LevelType.Outdoor, LevelType.Outdoor,  LevelType.Outdoor, LevelType.Outdoor, // 0c - 0f
-                LevelType.Outdoor, LevelType.Indoor,   LevelType.Outdoor, LevelType.Indoor,  // 10 - 13
+                LevelType.Outdoor, LevelType.Bonus,    LevelType.Outdoor, LevelType.Indoor,  // 10 - 13
                 LevelType.Indoor,  LevelType.Outdoor,  LevelType.Outdoor, LevelType.Outdoor, // 14 - 17
-                LevelType.Indoor,  LevelType.Outdoor,  LevelType.Indoor,  LevelType.Indoor,  // 18 - 1B
-                LevelType.Indoor,  LevelType.Outdoor,  LevelType.Indoor,  LevelType.Indoor,  // 1C - 1F
-                LevelType.Indoor,  LevelType.Indoor,   LevelType.Water,   LevelType.Indoor,  // 20 - 23
+                LevelType.Indoor,  LevelType.Outdoor,  LevelType.Bonus,   LevelType.Bonus,   // 18 - 1B
+                LevelType.Bonus,   LevelType.Outdoor,  LevelType.Bonus,   LevelType.Bonus,   // 1C - 1F
+                LevelType.Bonus,   LevelType.Indoor,   LevelType.Water,   LevelType.Indoor,  // 20 - 23
                 LevelType.Outdoor, LevelType.Outdoor,  LevelType.Outdoor, LevelType.Indoor,  // 24 - 27
                 LevelType.Outdoor, LevelType.Indoor,   LevelType.Water,   LevelType.Outdoor, // 28 - 2B
                 LevelType.Outdoor, LevelType.Indoor,   LevelType.Indoor,  LevelType.Indoor,  // 2C - 2F
-                LevelType.Indoor,  LevelType.Indoor,   LevelType.Indoor,  LevelType.Indoor,  // 30 - 33
+                LevelType.Indoor,  LevelType.Indoor,   LevelType.Bonus,   LevelType.Bonus,   // 30 - 33
                 LevelType.Indoor,  LevelType.Outdoor,  LevelType.Indoor,  LevelType.Indoor,  // 34 - 37
                 LevelType.Indoor,  LevelType.Indoor,   LevelType.Indoor,  LevelType.Indoor,  // 38 - 3B
                 LevelType.Indoor,  LevelType.Indoor,   LevelType.Outdoor, LevelType.Outdoor, // 3C - 3F
                 LevelType.Outdoor, LevelType.Indoor,   LevelType.Outdoor, LevelType.Outdoor, // 40 - 43
-                LevelType.Indoor,  LevelType.Indoor,   LevelType.Indoor,  LevelType.Indoor,  // 44 - 47
-                LevelType.Indoor,  LevelType.Indoor,   LevelType.Indoor,  LevelType.Indoor,  // 48 - 4B
-                LevelType.Indoor,  LevelType.Indoor,   LevelType.Indoor,  LevelType.Indoor,  // 4C - 4F
-                LevelType.Indoor, // 50 - 53
-
+                LevelType.Indoor,  LevelType.Indoor,   LevelType.Bonus,   LevelType.Indoor,  // 44 - 47
+                LevelType.Bonus,   LevelType.Indoor,   LevelType.Indoor,  LevelType.Indoor,  // 48 - 4B
+                LevelType.Bonus,   LevelType.Bonus,    LevelType.Bonus,   LevelType.Bonus,   // 4C - 4F
+                LevelType.Bonus,   LevelType.Indoor,   LevelType.Bonus,   LevelType.Bonus,   // 50 - 53
+		LevelType.Outdoor, LevelType.Bonus,    LevelType.Bonus,   LevelType.Bonus,   // 54 - 57
+		LevelType.Outdoor, LevelType.Outdoor,  LevelType.Indoor,  LevelType.Indoor,  // 58 - 5B
+		LevelType.Outdoor, LevelType.Indoor,   LevelType.Unknown, LevelType.Outdoor, // 5C - 5F
+		LevelType.Bonus,   LevelType.Bonus,    LevelType.Water,   LevelType.Bonus, // 60 - 63
+		LevelType.Indoor,  LevelType.Outdoor,  LevelType.Bonus,   LevelType.Bonus, // 64 - 67
+		LevelType.Outdoor, LevelType.Bonus,    LevelType.Bonus,   LevelType.Bonus, // 68 - 6B		
+		LevelType.Bonus,   LevelType.Water,    LevelType.Outdoor, LevelType.Outdoor, // 6C - 6F
+		LevelType.Outdoor, LevelType.Outdoor,  LevelType.Outdoor, LevelType.Outdoor, // 70 - 73
+		LevelType.Outdoor, LevelType.Outdoor,  LevelType.Outdoor, LevelType.Outdoor, // 74 - 77
+		LevelType.Outdoor, LevelType.Outdoor,  LevelType.Outdoor, LevelType.Outdoor, // 78 - 7B
+		LevelType.Outdoor, LevelType.Outdoor,  LevelType.Outdoor, LevelType.Outdoor, // 7C - 7F
+		LevelType.Indoor,  LevelType.Indoor,   LevelType.Indoor,  LevelType.Indoor,  // 80 - 83
+		LevelType.Indoor,  LevelType.Indoor,   LevelType.Indoor,  LevelType.Indoor,  // 84 - 87
+		LevelType.Indoor,  LevelType.Indoor,   LevelType.Indoor,  LevelType.Indoor,  // 88 - 8B
+		LevelType.Indoor,  LevelType.Indoor,   LevelType.Indoor,  LevelType.Indoor,  // 8C - 8F
+		LevelType.Indoor,  LevelType.Indoor,   LevelType.Indoor,  LevelType.Indoor,  // 90 - 93
+		LevelType.Outdoor, LevelType.Outdoor,  LevelType.Outdoor, LevelType.Bonus,   // 94 - 97
+		LevelType.Bonus,   LevelType.Indoor,   LevelType.Indoor,  LevelType.Indoor,  // 98 - 9B
+		LevelType.Indoor,  LevelType.Indoor,   LevelType.Indoor,  LevelType.Indoor,  // 9C - 9F
+		LevelType.Indoor,  LevelType.Indoor,   LevelType.Indoor,  LevelType.Indoor,  // A0 - A3
+		LevelType.Outdoor, LevelType.Outdoor,  LevelType.Bonus,   LevelType.Outdoor,  // A4 - A7
+		LevelType.Outdoor, LevelType.Outdoor,  LevelType.Outdoor, LevelType.Water,    // A8 - AB
+		LevelType.Outdoor, LevelType.Outdoor,  LevelType.Outdoor, LevelType.Outdoor,  // AC - AF
+                LevelType.Outdoor, LevelType.Outdoor,  LevelType.Outdoor, LevelType.Bonus,    // B0 - B3
+		LevelType.Bonus,   LevelType.Bonus,    LevelType.Outdoor, LevelType.Outdoor,  // B4 - B7
+		LevelType.Outdoor, LevelType.Outdoor,  LevelType.Outdoor, LevelType.Outdoor, // B8 - BB
+		LevelType.Outdoor, LevelType.Indoor,   LevelType.Bonus,   LevelType.Water,   // BC - BF
+		LevelType.Water,   LevelType.Indoor,   LevelType.Indoor,  LevelType.Indoor,  // C0 - C3
+		LevelType.Indoor,  LevelType.Indoor,   LevelType.Indoor,  LevelType.Indoor,  // C4 - C7
+		LevelType.Indoor,  LevelType.Indoor,   LevelType.Indoor,  LevelType.Indoor,  // C8 - CB
+		LevelType.Indoor,  LevelType.Indoor,   LevelType.Outdoor,  LevelType.Outdoor,  // CC - CF		
+		LevelType.Outdoor, LevelType.Outdoor,  LevelType.Bonus,    LevelType.Bonus,    // D0 - D3
+		LevelType.Bonus,   LevelType.Bonus,    LevelType.Outdoor,  LevelType.Bonus,    // D4 - D7
+		LevelType.Outdoor, LevelType.Outdoor,  LevelType.Outdoor,  LevelType.Outdoor,  // D8 - DB
+		LevelType.Outdoor, LevelType.Outdoor,  LevelType.Outdoor,  LevelType.Outdoor,  // DC - DF
+		LevelType.Boss,    LevelType.Boss,     LevelType.Boss,     LevelType.Boss, // E0 - E3
+		LevelType.Boss,    LevelType.Unknown,  LevelType.Unknown,  LevelType.Unknown, // E4 - E7
+		
             };
             
             try {
@@ -268,29 +306,33 @@ namespace EffectPacks
 0080:a28e original instruction is: txa
 0080:a28f original instruction is: sta 0502  
     change 0080:a28e [22 80 7f 81]    ( jsl 817f80  )
-    
+
+0081:7F80  through 0081:****
+
+
+
 0081:7F80 change to [8A] - txa
         [8D 02 05]  -  sta 0502 
-		lda #7000
-		cmp #0
-		bne .skip_1  
+		lda $7000
+		cmp #0001
+		bne 7fd0  ; <= bne .skip_1  
 		stz $7002
-		lda $7004 ; lda #0000
+		lda $7004 ; was lda #0000
         eor $0500
 		tsb $7002								
-		lda $7006 ;lda #2aa0
+		lda $7006 ;was lda #2aa0
 		and $0500
 		lsr
 		tsb $7002
-		lda $7008 ; lda #d550
+		lda $7008 ; was lda #d550
 		and $0500
 		asl
 		tsb $7002
-		lda $7010 ; lda #0000
+		lda $7010 ; was lda #0000
 		and $0500
 		lsr
-        tsb $7002
-		lda $7012 ; lda #0000
+                tsb $7002
+		lda $7012 ; was lda #0000
 		and $0500
 		asl
 		tsb $7002
@@ -311,4 +353,7 @@ namespace EffectPacks
 		sta $7010
 		lda #0000
 		sta $7012
+		rtl
+		
+		
 */
