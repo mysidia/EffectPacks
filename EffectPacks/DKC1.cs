@@ -232,22 +232,22 @@ namespace EffectPacks
             byte[] levelTypeMap = new byte[]
             {
                 LevelType.Outdoor, LevelType.Outdoor,  LevelType.Bonus,   LevelType.Indoor,  // 00 - 03 
-                LevelType.Bonus,   LevelType.Bonus,    LevelType.Bonus,   LevelType.Outdoor, // 04 - 07
-                LevelType.Outdoor, LevelType.Outdoor,  LevelType.Indoor,  LevelType.Outdoor, // 08 - 0b
+                LevelType.Bonus,   LevelType.Bonus,    LevelType.Bonus,   LevelType.Indoor, // 04 - 07
+                LevelType.Outdoor, LevelType.Indoor,   LevelType.Indoor,  LevelType.Indoor, // 08 - 0b
                 LevelType.Outdoor, LevelType.Outdoor,  LevelType.Outdoor, LevelType.Outdoor, // 0c - 0f
-                LevelType.Outdoor, LevelType.Bonus,    LevelType.Outdoor, LevelType.Indoor,  // 10 - 13
-                LevelType.Indoor,  LevelType.Outdoor,  LevelType.Outdoor, LevelType.Outdoor, // 14 - 17
+                LevelType.Indoor,  LevelType.Bonus,    LevelType.Indoor, LevelType.Indoor,  // 10 - 13
+                LevelType.Indoor,  LevelType.Indoor,   LevelType.Outdoor, LevelType.Outdoor, // 14 - 17
                 LevelType.Indoor,  LevelType.Outdoor,  LevelType.Bonus,   LevelType.Bonus,   // 18 - 1B
                 LevelType.Bonus,   LevelType.Outdoor,  LevelType.Bonus,   LevelType.Bonus,   // 1C - 1F
                 LevelType.Bonus,   LevelType.Indoor,   LevelType.Water,   LevelType.Indoor,  // 20 - 23
-                LevelType.Outdoor, LevelType.Outdoor,  LevelType.Outdoor, LevelType.Indoor,  // 24 - 27
-                LevelType.Outdoor, LevelType.Indoor,   LevelType.Water,   LevelType.Outdoor, // 28 - 2B
-                LevelType.Outdoor, LevelType.Indoor,   LevelType.Indoor,  LevelType.Indoor,  // 2C - 2F
+                LevelType.Outdoor, LevelType.Outdoor,  LevelType.Indoor,  LevelType.Indoor,  // 24 - 27
+                LevelType.Outdoor, LevelType.Indoor,   LevelType.Water,   LevelType.Indoor,  // 28 - 2B
+                LevelType.Indoor,  LevelType.Indoor,   LevelType.Indoor,  LevelType.Indoor,  // 2C - 2F
                 LevelType.Indoor,  LevelType.Indoor,   LevelType.Bonus,   LevelType.Bonus,   // 30 - 33
                 LevelType.Indoor,  LevelType.Outdoor,  LevelType.Indoor,  LevelType.Indoor,  // 34 - 37
                 LevelType.Indoor,  LevelType.Indoor,   LevelType.Indoor,  LevelType.Indoor,  // 38 - 3B
-                LevelType.Indoor,  LevelType.Indoor,   LevelType.Outdoor, LevelType.Outdoor, // 3C - 3F
-                LevelType.Outdoor, LevelType.Indoor,   LevelType.Outdoor, LevelType.Outdoor, // 40 - 43
+                LevelType.Indoor,  LevelType.Indoor,   LevelType.Water,   LevelType.Water,   // 3C - 3F
+                LevelType.Indoor, LevelType.Indoor,   LevelType.Outdoor, LevelType.Outdoor, // 40 - 43
                 LevelType.Indoor,  LevelType.Indoor,   LevelType.Bonus,   LevelType.Indoor,  // 44 - 47
                 LevelType.Bonus,   LevelType.Indoor,   LevelType.Indoor,  LevelType.Indoor,  // 48 - 4B
                 LevelType.Bonus,   LevelType.Bonus,    LevelType.Bonus,   LevelType.Bonus,   // 4C - 4F
@@ -257,12 +257,13 @@ namespace EffectPacks
 		LevelType.Outdoor, LevelType.Indoor,   LevelType.Unknown, LevelType.Outdoor, // 5C - 5F
 		LevelType.Bonus,   LevelType.Bonus,    LevelType.Water,   LevelType.Bonus, // 60 - 63
 		LevelType.Indoor,  LevelType.Outdoor,  LevelType.Bonus,   LevelType.Bonus, // 64 - 67
-		LevelType.Outdoor, LevelType.Bonus,    LevelType.Bonus,   LevelType.Bonus, // 68 - 6B		
+		LevelType.Outdoor //boss 
+		, LevelType.Bonus,    LevelType.Bonus,   LevelType.Bonus, // 68 - 6B		
 		LevelType.Bonus,   LevelType.Water,    LevelType.Outdoor, LevelType.Outdoor, // 6C - 6F
 		LevelType.Outdoor, LevelType.Outdoor,  LevelType.Outdoor, LevelType.Outdoor, // 70 - 73
 		LevelType.Outdoor, LevelType.Outdoor,  LevelType.Outdoor, LevelType.Outdoor, // 74 - 77
-		LevelType.Outdoor, LevelType.Outdoor,  LevelType.Outdoor, LevelType.Outdoor, // 78 - 7B
-		LevelType.Outdoor, LevelType.Outdoor,  LevelType.Outdoor, LevelType.Outdoor, // 7C - 7F
+		LevelType.Indoor,  LevelType.Indoor,   LevelType.Indoor, LevelType.Indoor, // 78 - 7B
+		LevelType.Indoor, LevelType.Indoor,  LevelType.Indoor, LevelType.Indoor, // 7C - 7F
 		LevelType.Indoor,  LevelType.Indoor,   LevelType.Indoor,  LevelType.Indoor,  // 80 - 83
 		LevelType.Indoor,  LevelType.Indoor,   LevelType.Indoor,  LevelType.Indoor,  // 84 - 87
 		LevelType.Indoor,  LevelType.Indoor,   LevelType.Indoor,  LevelType.Indoor,  // 88 - 8B
@@ -273,11 +274,11 @@ namespace EffectPacks
 		LevelType.Indoor,  LevelType.Indoor,   LevelType.Indoor,  LevelType.Indoor,  // 9C - 9F
 		LevelType.Indoor,  LevelType.Indoor,   LevelType.Indoor,  LevelType.Indoor,  // A0 - A3
 		LevelType.Outdoor, LevelType.Outdoor,  LevelType.Bonus,   LevelType.Outdoor,  // A4 - A7
-		LevelType.Outdoor, LevelType.Outdoor,  LevelType.Outdoor, LevelType.Water,    // A8 - AB
+		LevelType.Outdoor, LevelType.Outdoor,  LevelType.Outdoor, LevelType.Outdoor,  // A8 - AB
 		LevelType.Outdoor, LevelType.Outdoor,  LevelType.Outdoor, LevelType.Outdoor,  // AC - AF
                 LevelType.Outdoor, LevelType.Outdoor,  LevelType.Outdoor, LevelType.Bonus,    // B0 - B3
-		LevelType.Bonus,   LevelType.Bonus,    LevelType.Outdoor, LevelType.Outdoor,  // B4 - B7
-		LevelType.Outdoor, LevelType.Outdoor,  LevelType.Outdoor, LevelType.Outdoor, // B8 - BB
+		LevelType.Bonus,   LevelType.Bonus,    LevelType.Outdoor, LevelType.Bonus,    // B4 - B7
+		LevelType.Bonus,   LevelType.Bonus,    LevelType.Outdoor, LevelType.Outdoor, // B8 - BB
 		LevelType.Outdoor, LevelType.Indoor,   LevelType.Bonus,   LevelType.Water,   // BC - BF
 		LevelType.Water,   LevelType.Indoor,   LevelType.Indoor,  LevelType.Indoor,  // C0 - C3
 		LevelType.Indoor,  LevelType.Indoor,   LevelType.Indoor,  LevelType.Indoor,  // C4 - C7
@@ -285,8 +286,8 @@ namespace EffectPacks
 		LevelType.Indoor,  LevelType.Indoor,   LevelType.Outdoor,  LevelType.Outdoor,  // CC - CF		
 		LevelType.Outdoor, LevelType.Outdoor,  LevelType.Bonus,    LevelType.Bonus,    // D0 - D3
 		LevelType.Bonus,   LevelType.Bonus,    LevelType.Outdoor,  LevelType.Bonus,    // D4 - D7
-		LevelType.Outdoor, LevelType.Outdoor,  LevelType.Outdoor,  LevelType.Outdoor,  // D8 - DB
-		LevelType.Outdoor, LevelType.Outdoor,  LevelType.Outdoor,  LevelType.Outdoor,  // DC - DF
+		LevelType.Outdoor, LevelType.Indoor,   LevelType.Indoor,   LevelType.Outdoor,  // D8 - DB
+		LevelType.Bonus,   LevelType.Outdoor,  LevelType.Water,    LevelType.Water,    // DC - DF
 		LevelType.Boss,    LevelType.Boss,     LevelType.Boss,     LevelType.Boss, // E0 - E3
 		LevelType.Boss,    LevelType.Unknown,  LevelType.Unknown,  LevelType.Unknown, // E4 - E7
 		
