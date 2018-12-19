@@ -330,40 +330,41 @@ Custom ASM to provide control of Joypad 1 Inputs
 		bne 7fd0  ; <= bne .skip_1  
 		stz $7002
 		lda $7e7004 ; was lda #0000
-                eor $0500
-		tsb $7002	; 0c 02 70							
+                trb $0500   ; Allow CC to disable an input						
 		lda $7e7006 ; af06707e  //was lda #2aa0
 		and $0500    ; 2d0005
 		lsr ; 4a
 		tsb $7002 ; 2d0005
-		lda $7008 ; //was lda #d550
+		lda $7e7008 ; //was lda #d550
 		and $0500
 		asl
 		tsb $7002
+                lda $7e700e  ; was lda #c00f
+		and $0500
+		tsb $7002
 		lda $7e700a ; was lda #0000
 		and $0500
+		lsr
 		lsr
                 tsb $7002
 		lda $7e700c ; was lda #0000
 		and $0500
 		asl
-		tsb $7002
-		lda $7e700e  ; was lda #c00f
-		and $0500
+		asl
 		tsb $7002
 		lda $7002
-		sta $0500
-		rtl
-.skip_1 
-        lda #0000
-        sta $7e7004
-	sta $7e7006
-	sta $7e7008
-	sta $7e7010
-	sta $7e7012
-	lda #ffff
-	sta $7e7014
-        ;lda #2aa0
+		sta $0500		
+                rtl
+.skip_1         rtl
+        ;lda #0000
+        ;sta $7e7004
+	;sta $7e7006
+	;sta $7e7008
+	;sta $7e7010
+	;sta $7e7012
+	;lda #ffff
+	;sta $7e7014
+        ;;lda #2aa0
         ;sta $7006
 	;	lda #d550
 	;	sta $7008
