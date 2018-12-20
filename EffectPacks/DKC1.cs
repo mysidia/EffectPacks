@@ -32,15 +32,14 @@ namespace EffectPacks
         {
             byte[] result = new byte[16];
 
-
             // Connector?.WriteBytes(0x7e70f0, new byte[] { 0x33, 0x33, 
-            // 0x00, 0x00,
             // 0x00, 0x00, 
+            // 0x00, 0x00, <- Disabled Inputs
             // 0xa0, 0x2a, <- RS1
             // 0x50, 0xd5, <- LS1
             // 0x00,  0x00, <- LS2
             // 0x00, 0x00, <- RS2
-            // 0x0f, 0xc0 <- CP } );
+            // 0x0f, 0xc0 <- Passthrough } );
 
             /* ---ROM PATCH 1----
              * 0080:a28e original instruction is: txa
@@ -88,6 +87,10 @@ namespace EffectPacks
             {
                 result[0] = 0x33; /* Tell the  ROM patch to turn on */
                 result[1] = 0x33;
+
+                // Block the [Start]/Pause button while reverse controls
+                // are in effect
+                result[5] |= (1 << 4);
             }
 
             switch (dpad)
@@ -119,13 +122,21 @@ namespace EffectPacks
         public DKC1([NotNull] IPlayer player, [NotNull] Func<CrowdControlBlock, bool> responseHandler, [NotNull] Action<object> statusUpdateHandler) : base(responseHandler, statusUpdateHandler) => _player = player;
         public override List<Effect> Effects => new List<Effect>(new[]
         {
+            // Earthquake / Shake the screen
             new Effect("Shake (1 minute)", "shake", 10),
+            // Steal the player's bananas
             new Effect("Take Bananas", "takebananas", 1),
+            // Send a free extra life
             new Effect("Send extra life", "extralife", 1),
+            // The screen gradually darkens; completely black after 28 seconds
             new Effect("Darkness (26 seconds)", "darkness", 1),
+            // Lift the player up and drop them
             new Effect("Lift", "lift", 1),
+            // Reverse Player1 DPAD Controls
             new Effect("Reverse D-Pad (1 minute)", "invertdpad", 1),
+            // Rotate Player1 DPAD controls
             new Effect("Rotate D-Pad (1 minute)", "rotatedpad", 1),
+            // Swap Player1 A/B X/Y buttons.
             new Effect("Swap buttons (1 minute)", "swapbuttons", 1),
         });
 
@@ -150,10 +161,10 @@ namespace EffectPacks
             byte? playState = Connector.ReadByte(0x7e0579);
             bool gameIsPaused = ((playState ?? 0x0) & 0x40) != 0;
 
+            // No effects start if Paused or not playing a level
             if (checkByte1 == null || playState == null ||
                  checkByte1.Equals(0x0) || gameIsPaused)
             {
-
                 DelayEffect(request, TimeSpan.FromSeconds(10));
                 return;
             }
@@ -205,7 +216,7 @@ namespace EffectPacks
                 }
             }
 
-
+            // Begin affecting the player
             switch (request.InventoryItem.BaseItem.Code)
             {
                 case "extralife":
