@@ -32,7 +32,7 @@ namespace EffectPacks
         {
             byte[] result = new byte[16];
 
-            
+
             // Connector?.WriteBytes(0x7e70f0, new byte[] { 0x33, 0x33, 
             // 0x00, 0x00,
             // 0x00, 0x00, 
@@ -41,6 +41,48 @@ namespace EffectPacks
             // 0x00,  0x00, <- LS2
             // 0x00, 0x00, <- RS2
             // 0x0f, 0xc0 <- CP } );
+
+            /* ---ROM PATCH 1----
+             * 0080:a28e original instruction is: txa
+             * 0080:a28f original instruction is: sta 0502  
+             *     change ROM c0:a28e [22 80 7f 81]    ( jsl .jpmodify 817f80  )
+             *   .jpmodify at ROM location c1:7f80  (aka PC=0x817f80)
+             *      TXA  ;8A
+             *      STA $0502 ;8D0205
+             *      LDA #$3333  ;A93333
+             *      CMP $7E70F0 ;CFF0707E
+             *      BNE $7FDC   ;D04F
+             *      stz $1E70   ;9C701E
+             *      lda $7E70F4 ;AFF4707E
+             *      trb $0500   ;1C0005
+             *      lda $7E70F6 ;AFF6707E
+             *      and $0500   ;2D0005
+             *      lsr         ;4A
+             *      tsb $1E70   ;0C701E
+             *      lda $7E70F8 ;AFF8707E
+             *      and $0500   ;2D0005
+             *      asl         ;0A
+             *      tsb $1E70   ;0C701E
+             *      lda $7E70FE ;AFFE701E
+             *      and $0500    ;2D0005
+             *      tsb $1E70   ;0c701e
+             *      lda $7E70FA ;AFFA707E
+             *      and $0500   ;2D0005
+             *      lsr         ;4A
+             *      lsr         ;4A
+             *      tsb $1E70   ;00701E
+             *      lda $7E70FC ;AFFC707E
+             *      and $0500   ;2D0005
+             *      asl         ;0A
+             *      asl         ;0A
+             *      tsb $1E70   ;0c701e
+             *      lda $1E70   ;aD701e
+             *      sta $0500   ;8D0005
+             *      sta $0502   ;8d0205
+             *      sta $0504   ;8d0405
+             *      rtl         ;6B
+             *      rtl         ;6B
+             */
 
             if (dpad != PadState.NORMAL || abxy != PadState.NORMAL)
             {
@@ -52,7 +94,7 @@ namespace EffectPacks
             {
                 default: break;
                 case PadState.INVERT:  result[7] |=  0x0A; result[9] |=  0x05; break;
-                case PadState.ROTATE:  result[11] |= 0x30; result[13] |= 0x03; break;
+                case PadState.ROTATE:  result[11] |= 0x0C; result[13] |= 0x03; break;
             }
 
             switch(abxy)
@@ -60,16 +102,16 @@ namespace EffectPacks
                 default: break;
                 case PadState.INVERT:
                 case PadState.ROTATE:
-                    result[7] |= 0xA0;
                     result[6]  |= 0x80;
-                    result[9]  |= 0x50;
+                    result[7]  |= 0x80;
                     result[8]  |= 0x40;
+                    result[9]  |= 0x40;
                     break;
             }
 
             result[14] = (byte)~(result[4] | result[6] | result[8] | result[10] | result[12]);
             result[15] = (byte)~(result[5] | result[7] | result[9] | result[11] | result[13]);
-            Connector.SendMessage("result = " + result.ToString());
+            Connector.SendMessage("result = " +  string.Join(" ", result.Select( hh => hh.ToString("X2"))  ) );
             return result;
         }
 
@@ -205,8 +247,6 @@ namespace EffectPacks
                 case "shake":
                     {
                         // Let's make the ground start shaking
-                        //byte? g = Connector.ReadByte(0x009bf3);
-                        //System.Windows.Forms.MessageBox.Show("[" + g.ToString() + "]");
                         var (success, message) = StartTimed(request, 0x7e1b0d, 0x3f, TimeSpan.FromMinutes(1), "started a shake");
                         success &= Connector?.WriteByte(0x7e1b0c, 0xf0) ?? false;
 
@@ -221,7 +261,7 @@ namespace EffectPacks
                     }
                 case "takebananas":
                     {
-                        // Steal all their bananas
+                        // Steal their bananas
                         // $052B is the decimal ones-digit,  $052C is the tens digit
                         var (success, message) = ChangeWord(request, 0x7e052b, 0, 0, 1, true, "took your bananas");
 
@@ -433,74 +473,6 @@ namespace EffectPacks
     }
 }
 /*
-0080:a28e original instruction is: txa
-0080:a28f original instruction is: sta 0502  
-    change 0080:a28e [22 80 7f 81]    ( jsl 817f80  )
-
-0081:7F80  through 0081:****
-
-at 0081:7F80 change to [8A] - txa
-        [8D 02 05]  -  sta 0502 
-
-Custom ASM to provide control of Joypad 1 Inputs
-
-0081:7F80 8A8D0205A93333CFF0707E
-0081:7F8B D0499C0270
-0081:7F90 AFF4707E1C0005AFF6707E2D00054A0C
-0081:7FA0 0270AFF8707E2D00050A0C0270AFFE70
-0081:7FB0 7E2D00050C0270AFFA707E2D00054A4A
-0081:7FC0 0C0270AFFC707E2D00050A0A0C0270AD
-0081:7FD0 02708D00056B6B6B6B
-
-
-                lda $7e7000
-		cmp #1A1A
-		bne 7fd0  ; <= bne .skip_1  
-		stz $7002
-		lda $7e7004 ; was lda #0000
-                trb $0500   ; Allow CC to disable an input						
-		lda $7e7006 ; af06707e  //was lda #2aa0
-		and $0500    ; 2d0005
-		lsr ; 4a
-		tsb $7002 ; 2d0005
-		lda $7e7008 ; //was lda #d550
-		and $0500
-		asl
-		tsb $7002
-                lda $7e700e  ; was lda #c00f
-		and $0500
-		tsb $7002
-		lda $7e700a ; was lda #0000
-		and $0500
-		lsr
-		lsr
-                tsb $7002
-		lda $7e700c ; was lda #0000
-		and $0500
-		asl
-		asl
-		tsb $7002
-		lda $7002
-		sta $0500		
-                rtl
-.skip_1         rtl
-        ;lda #0000
-        ;sta $7e7004
-	;sta $7e7006
-	;sta $7e7008
-	;sta $7e7010
-	;sta $7e7012
-	;lda #ffff
-	;sta $7e7014
-        ;;lda #2aa0
-        ;sta $7006
-	;	lda #d550
-	;	sta $7008
-	;	lda #0000
-	;	sta $7010
-	;	lda #0000
-	;	sta $7012
-		rtl
 		
 		
 */
