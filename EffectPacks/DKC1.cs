@@ -184,14 +184,17 @@ namespace EffectPacks
             if (request.InventoryItem.BaseItem.Code.Equals("shake") ||
                 request.InventoryItem.BaseItem.Code.Equals("lift"))
             {
-                byte? levelByte = Connector?.ReadByte(0x7e003e);
+                byte? levelByte = Connector?.ReadByte(0x7E003E);
 
                 if (levelByte != null)
                 {
-                    int? entryType = Connector?.ReadWord((uint)0x3ffd60 + (uint)((levelByte ?? 0) << 1) );
+                    LevelType currentLevelType = GetLevelType((byte)levelByte);
 
-                    if (entryType == null || entryType == 0x8915)
+                    if (currentLevelType == LevelType.Water ||
+                        currentLevelType == LevelType.Unknown ||
+                        currentLevelType == LevelType.Bonus)
                     {
+                        
                         DelayEffect(request, TimeSpan.FromSeconds(60));
                         return;
                     }
@@ -388,18 +391,19 @@ namespace EffectPacks
             }
         }
 
-/*        private enum LevelType
+        private enum LevelType : byte
         {
-            Outdoor = 1,
-            Indoor = 2,   // Indoor, certain affects might be useless
-            Water = 3,    // Water,  certain affects don't work
-	    Bonus = 4,   
-            Unknown = 5
+            Outdoor = 0x1,
+            Indoor = 0x2,   // Indoor, certain affects might be useless
+            Water = 0x3,    // Water,  certain affects don't work
+	        Bonus = 0x4,   
+            Unknown = 0x5,
+            Boss = 0x6
         };
 
         LevelType GetLevelType(int levelid)
         {
-            byte[] levelTypeMap = new byte[]
+            LevelType[] levelTypeMap = new LevelType[]
             {
                 LevelType.Outdoor, LevelType.Outdoor,  LevelType.Bonus,   LevelType.Indoor,  // 00 - 03 
                 LevelType.Bonus,   LevelType.Bonus,    LevelType.Bonus,   LevelType.Indoor, // 04 - 07
@@ -468,7 +472,7 @@ namespace EffectPacks
             } catch {
                  return LevelType.Unknown;
             }
-        }*/
+        }
 
     }
 }
