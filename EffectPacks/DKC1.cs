@@ -111,7 +111,7 @@ namespace EffectPacks
 
             result[14] = (byte)~(result[4] | result[6] | result[8] | result[10] | result[12]);
             result[15] = (byte)~(result[5] | result[7] | result[9] | result[11] | result[13]);
-            Connector.SendMessage("result = " +  string.Join(" ", result.Select( hh => hh.ToString("X2"))  ) );
+            //Connector.SendMessage("result = " +  string.Join(" ", result.Select( hh => hh.ToString("X2"))  ) );
             return result;
         }
 
