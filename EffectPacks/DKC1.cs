@@ -292,6 +292,7 @@ namespace EffectPacks
                             mydpadstate = PadState.INVERT;
                             var (success, message) = StartTimed(request, 0x7e70f0, 0x33, TimeSpan.FromMinutes(1), "reversed your dpad");
                             Respond(request, success ?? false, message);
+                            return;
                         }
                         Respond(request, false, "could not invert dpad");
                         return;
@@ -304,6 +305,7 @@ namespace EffectPacks
                             mydpadstate = PadState.ROTATE;
                             var (success, message) = StartTimed(request, 0x7e70f0, 0x33, TimeSpan.FromMinutes(1), "rotated your dpad");
                             Respond(request, success ?? false, message);
+                            return;
                         }
                         Respond(request, false, "could not rotate dpad");
                         return;
@@ -316,6 +318,7 @@ namespace EffectPacks
                             myabxystate = PadState.INVERT;
                             var (success, message) = StartTimed(request, 0x7e70f0, 0x33, TimeSpan.FromMinutes(1), "swapped the buttons around");
                             Respond(request, success ?? false, message);
+                            return;
                         }
                         Respond(request, false, "could not swap the buttons around");
                         return;
