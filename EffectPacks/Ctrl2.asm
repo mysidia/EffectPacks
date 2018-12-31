@@ -45,7 +45,7 @@
            STZ  $1E70
            LDX   #$0000
            LDA   #$0080
-           STA   $70F2
+           STA   $1E76
 .btn0      LDA $70F4, X
            STZ   $1E72
            BIT   #$08
@@ -59,7 +59,7 @@
            CMP #$0000
            BEQ done1
            LDA $0500
-           AND $70F2
+           AND $1E76
  .right_n  LSR
            DEC Y
            BEQ right_n
@@ -70,7 +70,7 @@
            CMP #$0000
            BEQ done1
            LDA $0500
- .left_n   AND $70F2
+ .left_n   AND $1E76
            ASL
            DEC Y
            BEQ left_n
@@ -78,7 +78,7 @@
            #BEQ 
            XBA
            TSB $1E70
-           LSR $70F2
+           LSR $1E76
            INC X
            TXA
            BEQ btnfin
