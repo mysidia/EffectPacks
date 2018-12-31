@@ -1,4 +1,9 @@
            STX   $1E74
+           STA $0502 ;8D0205
+           LDA #$3333  ;A93333
+           CMP $7E70F0 ;CFF0707E
+           BNE btnskip   ;D0xx
+           STZ  $1E70
            LDX   #$0000
            LDA   #$0080
            STA   $70F2
@@ -44,4 +49,4 @@
            STA $0502
            STA $0504
            LDA $1E74
-           RTL
+.btnskip   RTL
