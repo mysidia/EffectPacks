@@ -37,55 +37,55 @@
 ; }
 ; Connector?.WriteMemory(0x7e0000 + 0x70f0, result);
 
-           STX   $1E74
-           STA $0502 ;8D0205
-           LDA #$3333  ;A93333
-           CMP $7E70F0 ;CFF0707E
-           BNE btnskip   ;D0xx
-           STZ  $1E70
-           LDX   #$0000
-           LDA   #$0080
-           STA   $1E76
-.btn0      LDA $70F4, X
-           STZ   $1E72
-           BIT   #$08
-           BNE   nobytesw
-           INC   $1E72
-.nobytesw  BIT #$0010
-           BEQ nsleft
-.nsright   LDA #$0010
-           BIT #$0007
-           TAY           
-           CMP #$0000
-           BEQ done1
-           LDA $0500
-           AND $1E76
- .right_n  LSR
-           DEC Y
-           BEQ right_n
-           BRA done1
-.nsleft    LDA $70F4, X
-           BIT #$0007
-           TAY
-           CMP #$0000
-           BEQ done1
-           LDA $0500
- .left_n   AND $1E76
-           ASL
-           DEC Y
-           BEQ left_n
-.done1     DEC $1E72
-           #BEQ 
-           XBA
-           TSB $1E70
-           LSR $1E76
-           INC X
-           TXA
-           BEQ btnfin
-           BRA btn0	   
-.btnfin    LDA $1E70
-           STA $0500
-           STA $0502
-           STA $0504
-           LDA $1E74
-.btnskip   RTL
+           STX $1E74      ;8E7410
+           STA $0502      ;8D0205
+           LDA #$3333     ;A93333
+           CMP $7E70F0    ;CFF0707E
+           BNE btnskip    ;D0xx
+           STZ $1E70      ;9C701E
+           LDX #$0000     ;A90000
+           LDA #$0080     ;A98000
+           STA $1E76      ;8D761E
+.btn0      LDA $7E70F4, X ;BFF4707E
+           STZ $1E72      ;9C721E
+           BIT #$08       ;890800
+           BNE nobytesw   ;D0xxxx
+           INC $1E72      ;EE721E
+.nobytesw  BIT #$0010     ;891000
+           BEQ nsleft     ;F0xxxx
+.nsright   LDA #$0010     ;A91000
+           BIT #$0007     ;890700
+           TAY            ;A8
+           CMP #$0000     ;C90000
+           BEQ done1      ;F0xxxx
+           LDA $0500      ;AD0005
+           AND $1E76      ;2D761E
+ .right_n  LSR            ;4A
+           DEC Y          ;88
+           BEQ right_n    ;F0xxxx
+           BRA done1      ;80xxxx
+.nsleft    LDA $7E70F4, X ;BFF4707E
+           BIT #$0007     ;890700
+           TAY            ;A8
+           CMP #$0000     ;C90000
+           BEQ done1      ;F0xxxx
+           LDA $0500      ;A90005
+           AND $1E76      ;2D761E
+ .left_n   ASL            ;0A
+           DEC Y          ;88
+           BEQ left_n     ;F0xxxx
+.done1     DEC $1E72      ;CE721E
+           #BEQ           ;F0xxxx
+           XBA            ;EB
+           TSB $1E70      ;0C701E
+           LSR $1E76      ;4E761E
+           INC X          ;E8
+           TXA            ;8A
+           BEQ btnfin     ;F0xxxx
+           BRA btn0	    ;80xxxx
+.btnfin    LDA $1E70      ;AD701E
+           STA $0500      ;8D0005
+           STA $0502      ;8D0205
+           STA $0504      ;8D0504
+           LDA $1E74      ;AD741E
+.btnskip   RTL            ;6B
