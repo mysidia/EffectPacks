@@ -1,7 +1,7 @@
-; 65c816 opcodes reference - http://www.6502.org/tutorials/65c816opcodes.html#1
+; Notes( 65c816 opcodes reference - http://www.6502.org/tutorials/65c816opcodes.html#1 )
 ;
 ; Copyright 2018-2019 Mysidia
-; Licensed under the Apache License, Version 2.0 (the "License");
+; The following is Licensed under the Apache License, Version 2.0 (the "License");
 ; you may not use this file except in compliance with the License.
 ; You may obtain a copy of the License at
 ; http://www.apache.org/licenses/LICENSE-2.0
