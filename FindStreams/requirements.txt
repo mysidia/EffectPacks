@@ -27,6 +27,6 @@ spark-parser==1.8.9
 timedelta==2020.12.3
 tkdesigner==1.0.7
 uncompyle6==3.7.4
-urllib3==1.26.16
+urllib3==1.26.18
 websockets==12.0
 xdis==5.0.13
