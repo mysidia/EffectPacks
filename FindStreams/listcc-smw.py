@@ -3,6 +3,7 @@ import requests
 import json
 import csv
 import os
+import re
 import time
 
 import apptoken
@@ -32,7 +33,7 @@ if lookup_request.status_code == 200:
     j1 = json.loads(lookup_request.text)
     try:
         for item in j1["data"]:
-            if 'broadcaster_id' in item:
+            if 'broadcaster_id' in item and re.match(r'^\d+$', item["broadcaster_id"]  ):
                 item["cclink"] = f'https://interact.crowdcontrol.live/#/twitch/{item["broadcaster_id"]}'
         print(json.dumps(j1))
     except Exception as err:
