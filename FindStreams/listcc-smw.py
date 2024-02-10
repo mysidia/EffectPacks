@@ -31,6 +31,9 @@ lookup_request = requests.get('https://api.twitch.tv/helix/extensions/live?'+
 if lookup_request.status_code == 200:
     j1 = json.loads(lookup_request.text)
     try:
+        for item in j1["data"]:
+            if 'broadcaster_id' in item:
+                item["cclink"] = f'https://interact.crowdcontrol.live/#/twitch/{item["broadcaster_id"]}'
         print(json.dumps(j1))
     except Exception as err:
         raise Exception("Could not lookup " + str(err))
