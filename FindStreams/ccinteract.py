@@ -11,6 +11,7 @@ import json
 import random
 import time
 import logging
+import traceback
 
 class CrowdInteract():
     """
@@ -48,7 +49,11 @@ class CrowdInteract():
         if not(logger):
             self.logger = logging.getLogger("ccinteract.py")
 
-    def getRequestHeaders(self, cc_auth_token):
+    def getRequestHeaders(self, cc_auth_token=None, send_authtoken=True):
+        if not(cc_auth_token) and send_authtoken:
+            cc_auth_token = apptoken.get_token_secrets(onekey='cc-auth-token')
+        else:
+            cc_auth_token = ''
         headers = {
                 'authority': 'trpc.crowdcontrol.live',
                 'accept': '*/*',
@@ -58,7 +63,64 @@ class CrowdInteract():
                 'pragma' : 'no-cache',
                 'user-agent' : f'ccinteracct/0.01 ({platform.platform()}; Python/{platform.python_version()})'
                 }
+        if not(send_authtoken):
+            del headers['authorization']
         return headers
+
+    def getUserProfile_TwithID(self, twitch_broadcaster_id):
+        url = 'https://trpc.crowdcontrol.live/user.getUserProfile'
+        params = { 
+           "input"  :  json.dumps({
+           "originID" : str(twitch_broadcaster_id),
+           "profileType" : "twitch"
+           })
+        }
+        print (f'PARAMS: {params["input"]}')
+        response = requests.get(url, params, headers = self.getRequestHeaders())
+        if response.status_code == 200:
+             try:
+                  self.logger.info('getUserProfile_TwithID - 200 OK Response')
+                  profileObject = json.loads(response.content)['result']['data']['profile']
+                  return profileObject
+             except Exception as xe:
+                  self.logger.error(f'getUserProfile_TwitchID({twitch_broadcaster_id}):Error: {xe}')
+                  traceback.print_exc()
+                  pass
+        else:
+                  self.logger.error(f'getUserProfile_TwitchID({twitch_broadcaster_id}):Request Error: {response.content}')
+        return None
+
+    def _getpath_ccuid(foritem, subitem, ccuid):
+         url = f'https://trpc.crowdcontrol.live/{foritem}'
+         params = {
+           "input"  :  json.dumps({
+           "ccUID" : str(ccuid),
+           })
+        }
+        response = requests.get(url, params, headers = self.getRequestHeaders())
+        if response.status_code == 200:
+             try:
+                  self.logger.info(f'getpath_ccuid:{foritem} - 200 OK Response')
+                  profileObject = json.loads(response.content)['result']['data'][subitem]
+                  return profileObject
+             except Exception as xe:
+                  self.logger.error(f'getpath_ccuid:{foritem}:Error: {xe}')
+                  traceback.print_exc()
+                  pass
+        else:
+                  self.logger.error(f'getpath_ccuid:{foritem}:Request Error: {response.content}')
+        return None
+
+    def getUserSettings(self, ccuid):
+        return CrowdInteract._getpath_ccuid('getUserSettings', '', ccuid)
+
+    def getUsersActiveGameSession(self, ccuid):
+        return CrowdInteract._getpath_ccuid('getUsersActiveGameSession', 'session', ccuid)
+
+        
+    
+     
+    
     def getSessionInfo(self):
         cc_auth_token = apptoken.get_token_secrets(onekey='cc-auth-token')
         ccuid_raw = apptoken.get_token_secrets(onekey='ccuid')
