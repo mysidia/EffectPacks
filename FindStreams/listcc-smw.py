@@ -23,7 +23,7 @@ gameid = 'game_id=1505160567&game_id=1229'
 #channel_name = input('Enter the Twitch channel I:')  
 #lookup_request = requests.get('https://api.twitch.tv/helix/users?id=' + channel_name, headers = {'Client-ID' : client_id,  'Authorization' : 'Bearer ' +app_token})
 
-maximum_pagecount = 2
+maximum_pagecount = 3
 current_page = 0
 first_page = True
 pagination_string = None
@@ -32,6 +32,7 @@ while first_page or (pagination_string and len(pagination_string) > 0):
     first_page = False
     current_page = current_page + 1
     if current_page > maximum_pagecount:
+         print(f'[Display limited to {maximum_pagecount} pages, {maximum_pagecount*100} entries]')
          break
     if pagination_string:
         pagination_query = f'&after={urllib.parse.quote(pagination_string)}'
@@ -52,7 +53,7 @@ while first_page or (pagination_string and len(pagination_string) > 0):
             for item in j1["data"]:
                 if 'broadcaster_id' in item and re.match(r'^\d+$', item["broadcaster_id"]  ):
                     item["cclink"] = f'https://interact.crowdcontrol.live/#/twitch/{item["broadcaster_id"]}'
-            print(json.dumps(j1))
+            print(json.dumps(j1, indent=3))
             pagination_string = j1["pagination"]
         except Exception as err:
             raise Exception("Could not lookup " + str(err))
