@@ -53,6 +53,14 @@ while first_page or (pagination_string and len(pagination_string) > 0):
             for item in j1["data"]:
                 if 'broadcaster_id' in item and re.match(r'^\d+$', item["broadcaster_id"]  ):
                     item["cclink"] = f'https://interact.crowdcontrol.live/#/twitch/{item["broadcaster_id"]}'
+                    #time.sleep(1)
+                    # ci = CrowdInteract()
+                    # user_ccuid =  ci.getUserProfile_TwithID(  item["broadcaster_id"]  )
+                    # session = ci.getUsersActiveGameSession(user_ccuid) # Query: /gameSession.getUsersActiveGameSession ccUID=x
+                    # IF  session is Not null, then  print >
+                    # time.sleep(1)
+                #
+            #
             print(json.dumps(j1, indent=3))
             pagination_string = j1["pagination"]
         except Exception as err:

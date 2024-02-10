@@ -90,18 +90,27 @@ class CrowdInteract():
                   self.logger.error(f'getUserProfile_TwitchID({twitch_broadcaster_id}):Request Error: {response.content}')
         return None
 
-    def _getpath_ccuid(foritem, subitem, ccuid):
+    def _getpath_ccuid(self, foritem, subitem, ccuid):
         url = f'https://trpc.crowdcontrol.live/{foritem}'
         params = {
           "input"  :  json.dumps({
           "ccUID" : str(ccuid),
           })
         }
+        print(f'url={url}')
+        print(f'foritem={foritem} ccuid={ccuid}') 
+        print (f'PARAMS: {params["input"]}')
         response = requests.get(url, params, headers = self.getRequestHeaders())
         if response.status_code == 200:
              try:
-                  self.logger.info(f'getpath_ccuid:{foritem} - 200 OK Response')
-                  profileObject = json.loads(response.content)['result']['data'][subitem]
+                  CrowdInteract().logger.info(f'getpath_ccuid:{foritem} - 200 OK Response')
+                  jsonobj = json.loads(response.content)
+                  if subitem == None:
+                       return jsonobj['result']['data']
+                  if subitem in jsonobj['result']['data']:
+                      profileObject = jsonobj['result']['data'][subitem]
+                  else:
+                      return None
                   return profileObject
              except Exception as xe:
                   self.logger.error(f'getpath_ccuid:{foritem}:Error: {xe}')
@@ -111,11 +120,11 @@ class CrowdInteract():
                   self.logger.error(f'getpath_ccuid:{foritem}:Request Error: {response.content}')
         return None
 
-    def getUserSettings(self, ccuid):
-        return CrowdInteract._getpath_ccuid('getUserSettings', '', ccuid)
+    #def getUserSettings(self, ccuid):
+    #    return self._getpath_ccuid('getUserSettings', '', ccuid)
 
     def getUsersActiveGameSession(self, ccuid):
-        return CrowdInteract._getpath_ccuid('getUsersActiveGameSession', 'session', ccuid)
+        return self._getpath_ccuid('gameSession.getUsersActiveGameSession', 'session', ccuid)
 
         
     
