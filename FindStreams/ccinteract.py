@@ -91,11 +91,11 @@ class CrowdInteract():
         return None
 
     def _getpath_ccuid(foritem, subitem, ccuid):
-         url = f'https://trpc.crowdcontrol.live/{foritem}'
-         params = {
-           "input"  :  json.dumps({
-           "ccUID" : str(ccuid),
-           })
+        url = f'https://trpc.crowdcontrol.live/{foritem}'
+        params = {
+          "input"  :  json.dumps({
+          "ccUID" : str(ccuid),
+          })
         }
         response = requests.get(url, params, headers = self.getRequestHeaders())
         if response.status_code == 200:
