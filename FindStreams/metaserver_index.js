@@ -18,6 +18,7 @@ const db = new DBClient();
 const crypto = require('crypto')
 var bodyParser = require('body-parser')
 
+const serverbaseurl = process.env['baseurl']
 const clientid = process.env['tclientid'];
 const serverkey = process.env['serverkey_value'];
 //const mySecret = process.env['serverkey_value'];
@@ -176,6 +177,7 @@ app.get("/", (request, response) => {
   //response.sendFile(__dirname + "/views/index.html");  
      ejs.renderFile(__dirname + "/views/index.ejs", 
                     {
+                      "serverbaseurl" : serverbaseurl,
                       "clientid" : clientid,
                       "stateid" : Buffer.from(sheader).toString('base64url')
                     }/*data*/, {}/*options*/, 

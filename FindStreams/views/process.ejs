@@ -1,0 +1,132 @@
+<html>
+  <body>
+    <div id="panel1">
+        Please wait, authorization is being verified.
+      </div><div>
+        <div id="dlpanel" style="display:none">
+          <A HREF="#" ID="dlbtn">Download smwpicker_auth.json</A>
+          <A HREF="#" ID="dlsw">Download client</A>
+        </div>
+    <script src="/jquery-3.6.1.min.js"></script>
+    <script>
+    var atoken = ""
+    var ttype =""
+
+
+   function download(filename, text) {
+      var element = document.createElement('a');
+      element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(text));
+      element.setAttribute('download', filename);
+
+      element.style.display = 'none';
+      document.body.appendChild(element);
+      element.click();
+      document.body.removeChild(element);
+    }
+
+      
+      $(window).on('load', function(){        
+    if( location.hash && location.hash.length ) {
+       var hash = decodeURIComponent(location.hash.substr(1));
+      var urlParams = new URLSearchParams(hash);
+      atoken = urlParams.get("access_token")
+      ttype = urlParams.get("token_type")
+      stateinfo = urlParams.get("state")
+      secreth = {}
+
+      $.ajax({
+        url: "https://api.twitch.tv/helix/users",
+        type: "GET",
+        headers: {
+            "Client-Id" : "<%= clientid %>",
+            "Authorization" : "Bearer " + atoken
+        },
+         success: function(result) {
+             failcode = false
+             di = null
+           
+             if (!result.data || result.data.length < 1) {
+                   failcode=true               
+             }
+
+             if (!failcode) {
+               di = result.data[0]
+               musthaves = ["login", "id", "created_at", "display_name"]
+               for (x in musthaves) {
+                     if ( !(musthaves[x] in di) ) {
+                       failcode = true
+                     }
+               }
+             }
+
+
+            if (failcode) {
+              $("#html1").html(
+                "Twitch didn't respond with the required fields  login,created_at,display_name, Oops"
+              )
+              return
+            }
+           
+             secretsh = {
+               "twtoken" : atoken,
+               "twtokentype" : ttype,
+               "twlogin" : result.data[0]["login"],
+               "twid" : result.data[0]["id"],
+               "twcreated_at" : result.data[0]["created_at"],
+               "twitchinfo" : result.data[0],
+               "twstateinfo" : stateinfo
+             }
+
+            console.log("Login response")
+            console.log(secretsh)
+           
+            $.ajax({
+              url: "/process/data",
+              method: "POST",
+              data: JSON.stringify(secretsh),
+              dataType: "json",
+              contenType: "application/json",
+              headers: {
+                "Content-Type": "application/json", 
+                "stateinfo" : stateinfo
+              },
+              success: processSuccess
+            })
+         },
+         error: function(result) {
+           $("#panel1").html(
+             "Twitch login failed. :( " +
+             result 
+                  )
+         }
+      });
+
+      
+    }       
+});
+
+var objectRecord = {}
+ function getClient() {
+   document.location="/process/getclient"
+ }
+      
+ function clickDownload() {
+     download("smwpicker_auth.json", JSON.stringify(objectRecord))
+ }
+      
+ function processSuccess(result) {
+   if (result.validated == "1") {
+     objectRecord = result 
+   $("#panel1").html("Logged in successfully.<BR>")
+     $("#dlbtn").click(clickDownload)
+     $("#dlsw").click(getClient)
+     $("#dlpanel").show()
+   } else {
+     $("#panel1").html("Authorization Failed - " +
+                      result.message)
+   }
+   
+ }
+    </script>
+  </body>
+</html>
