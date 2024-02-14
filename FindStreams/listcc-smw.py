@@ -22,13 +22,16 @@ gamefilter_query = ''
 if 'gamefilter' in os.environ:
     if re.search(r'&', os.environ['gamefilter']):
         gamefilter_query = '&'.join( 
-            map(
-                 lambda g: '='.join(map(
-                    lambda h: urllib.parse.quote(h),
-                    g.split('='))),
-                 os.environ['gamefilter'].split('&')
-            )
-        )
+           filter(
+              lambda attribute: re.match(r'^gameid=\d+', attribute), 
+                map(
+                     lambda g: '='.join(map(
+                        lambda h: urllib.parse.quote(h),
+                        g.split('='))),
+                     os.environ['gamefilter'].split('&')
+               )  #map
+           ) #filter
+        ) #join
     elif os.environ['gamefilter'] == '1':
         gamefilter_query = gameid
     elif re.match(r'^\d+$', os.environ['gamefilter']):
