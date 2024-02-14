@@ -32,7 +32,7 @@ extension_query = f'extension_id=7nydnrue11053qmjc6g0fd6einj75p'
 #       Set outjson to 0  to output as human readable
 #       Set outjson to 1  to output results as JSON
 #
-# Example command line:    outjson=1  python3 listcc-smw.py
+# Example command line:    outjson=1  python3 listcc.py
 #
 outjson = 1
 if 'outjson' in os.environ and re.match(r'^\d+$', os.environ['outjson']):
@@ -40,13 +40,13 @@ if 'outjson' in os.environ and re.match(r'^\d+$', os.environ['outjson']):
 #
 # Filter query by gameid
 #
-# Example usage1:   gamefilter=1229 python3 listcc-smw.py
+# Example usage1:   gamefilter=1229 python3 listcc.py
 #       Finds SMW Streams with extension active
-# Example usage2:   outjson=0 gamefilter='&game_id=1229&game_id=1036710512' python3 listcc-smw.py 
+# Example usage2:   outjson=0 gamefilter='&game_id=1229&game_id=1036710512' python3 listcc.py 
 #       Lists both SMW and Palworld streams with extension active
 #
 #
-# Example usage3:   gamefilter=1036710512  python3 listcc-smw.py 
+# Example usage3:   gamefilter=1036710512  python3 listcc.py 
 #       Finds Palworld streams with extension active
 #
 gamefilter_query = ''
