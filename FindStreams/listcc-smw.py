@@ -18,6 +18,22 @@ outjson = 1
 if 'outjson' in os.environ and re.match(r'^\d+$', os.environ['outjson']):
     outjson = int( os.environ['outjson'] )
 
+gamefilter_query = ''
+if 'gamefilter' in os.environ:
+    if re.search(r'&', os.environ['gamefilter']):
+        gamefilter_query = '&'.join( 
+            map(
+                 lambda g: '='.join(map(
+                    lambda h: urllib.parse.quote(h),
+                    g.split('='))),
+                 os.environ['gamefilter'].split('&')
+            )
+        )
+    elif os.environ['gamefilter'] == '1':
+        gamefilter_query = gameid
+    elif re.match(r'^\d+$', os.environ['gamefilter']):
+        gamefilter_query = f'game_id={ os.environ["gamefilter"] }'
+
 #url1 = 'https://api.twitch.tv/helix/streams?first=100&'+str(gameid)
 #print("Lookup request:" + url1)
 #print("Search for channels with " + str(gameid) + " : " )
@@ -44,7 +60,7 @@ while first_page or (pagination_string and len(pagination_string) > 0):
         pagination_query = ''
 
     lookup_url = ('https://api.twitch.tv/helix/extensions/live?'+
-          'extension_id=7nydnrue11053qmjc6g0fd6einj75p' + pagination_query)
+          'extension_id=7nydnrue11053qmjc6g0fd6einj75p' + gamefilter_query + pagination_query)
 
     print(f"requests.get(\"{lookup_url}\")")
     lookup_request = requests.get(lookup_url,
