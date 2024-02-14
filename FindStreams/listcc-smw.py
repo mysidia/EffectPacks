@@ -14,6 +14,10 @@ client_secret = readTokens[1]
 app_token = readTokens[2]
 gameid = 'game_id=1505160567&game_id=1229'
 
+outjson = 1
+if 'outjson' in os.environ and re.match(r'^\d+$', os.environ['outjson']):
+    outjson = int( os.environ['outjson'] )
+
 #url1 = 'https://api.twitch.tv/helix/streams?first=100&'+str(gameid)
 #print("Lookup request:" + url1)
 #print("Search for channels with " + str(gameid) + " : " )
@@ -61,7 +65,13 @@ while first_page or (pagination_string and len(pagination_string) > 0):
                     # time.sleep(1)
                 #
             #
-            print(json.dumps(j1, indent=3))
+            if outjson:
+                print(json.dumps(j1, indent=3))
+            else:
+                for item in j1["data"]:
+                    print('%-20s  - %s %s' % ( item["broadcaster_name"], item["game_id"], item["game_name"]))
+                    print('      - Title: %s' % (item["title"]))
+                    print('      - Interact: %s' % (item["cclink"]))
             pagination_string = j1["pagination"]
         except Exception as err:
             raise Exception("Could not lookup " + str(err))
