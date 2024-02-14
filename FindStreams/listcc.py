@@ -35,7 +35,7 @@ extension_query = f'extension_id=7nydnrue11053qmjc6g0fd6einj75p'
 # Example command line:    outjson=1  python3 listcc.py
 #
 outjson = 1
-if 'outjson' in os.environ and re.match(r'^\d+$', os.environ['outjson']):
+if ('outjson' in os.environ and re.match(r'^\d+$', os.environ['outjson'])):
     outjson = int( os.environ['outjson'] )
 #
 # Filter query by gameid
@@ -51,8 +51,8 @@ if 'outjson' in os.environ and re.match(r'^\d+$', os.environ['outjson']):
 #
 gamefilter_query = ''
 gameidlist = []
-if 'gamefilter' in os.environ:
-    if re.search(r'&', os.environ['gamefilter']):
+if ('gamefilter' in os.environ):
+    if (re.search(r'&', os.environ['gamefilter'])):
         gamefilter_query = '&' + '&'.join( 
            filter(
               lambda attribute: re.match(r'^game_id=\d+', attribute), 
@@ -64,18 +64,18 @@ if 'gamefilter' in os.environ:
                )  #map
            ) #filter
         ) #join
-    elif os.environ['gamefilter'] == '1':
+    elif (os.environ['gamefilter'] == '1'):
         gamefilter_query = '&' + gameid
-    elif re.match(r'^\d+$', os.environ['gamefilter']):
+    elif (re.match(r'^\d+$', os.environ['gamefilter'])):
         gamefilter_query = f'&game_id={ os.environ["gamefilter"] }'
     for filterItem in gamefilter_query.split('&'):
         filterEntry = filterItem.split('=')
-        if filterEntry[0] == 'game_id':
+        if (filterEntry[0] == 'game_id'):
             gameidlist.append( str(filterEntry[1]) )
     print(f'GAMEFILTER_QUERY={gamefilter_query}')
 
-if 'extension' in os.environ:
-    if re.search(r'&', os.environ['extension']):
+if ('extension' in os.environ):
+    if (re.search(r'&', os.environ['extension'])):
         extension_query = '' + '&'.join(
            filter(
               lambda attribute: re.match(r'^extension_id=[a-fA-F0-9]+', attribute),
@@ -103,7 +103,7 @@ current_page = 0
 first_page = True
 pagination_string = None
 
-while first_page or (pagination_string and len(pagination_string) > 0):
+while (first_page or (pagination_string and len(pagination_string) > 0)):
     first_page = False
     current_page = current_page + 1
     if current_page > maximum_pagecount:
@@ -142,7 +142,7 @@ while first_page or (pagination_string and len(pagination_string) > 0):
                 print(json.dumps(j1, indent=3))
             else:
                 for item in j1["data"]: 
-                    if len(gameidlist) > 0:
+                    if (len(gameidlist) > 0):
                         if not( str(item["game_id"]) in gameidlist ):
                             continue
                     print('%-20s  - %s %s' % ( item["broadcaster_name"], item["game_id"], item["game_name"]))
