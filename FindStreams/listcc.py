@@ -1,4 +1,9 @@
 #!/usr/bin/python
+#
+#
+# Search for streams with given Twitch extension active
+#
+#
 import requests
 import json
 import csv
@@ -14,16 +19,43 @@ client_secret = readTokens[1]
 app_token = readTokens[2]
 gameid = 'game_id=1505160567&game_id=1229'
 
+# Twitch extension ID to search for
+extension_query = f'extension_id=7nydnrue11053qmjc6g0fd6einj75p'
+
+#    lookup_url = ('https://api.twitch.tv/helix/extensions/live?'+
+#          extension_query + pagination_query)
+#####
+
+
+### Environment variables you can set to influence query results: ###
+#
+#       Set outjson to 0  to output as human readable
+#       Set outjson to 1  to output results as JSON
+#
+# Example command line:    outjson=1  python3 listcc-smw.py
+#
 outjson = 1
 if 'outjson' in os.environ and re.match(r'^\d+$', os.environ['outjson']):
     outjson = int( os.environ['outjson'] )
-
+#
+# Filter query by gameid
+#
+# Example usage1:   gamefilter=1229 python3 listcc-smw.py
+#       Finds SMW Streams with extension active
+# Example usage2:   outjson=0 gamefilter='&game_id=1229&game_id=1036710512' python3 listcc-smw.py 
+#       Lists both SMW and Palworld streams with extension active
+#
+#
+# Example usage3:   gamefilter=1036710512  python3 listcc-smw.py 
+#       Finds Palworld streams with extension active
+#
 gamefilter_query = ''
+gameidlist = []
 if 'gamefilter' in os.environ:
     if re.search(r'&', os.environ['gamefilter']):
-        gamefilter_query = '&'.join( 
+        gamefilter_query = '&' + '&'.join( 
            filter(
-              lambda attribute: re.match(r'^gameid=\d+', attribute), 
+              lambda attribute: re.match(r'^game_id=\d+', attribute), 
                 map(
                      lambda g: '='.join(map(
                         lambda h: urllib.parse.quote(h),
@@ -33,9 +65,29 @@ if 'gamefilter' in os.environ:
            ) #filter
         ) #join
     elif os.environ['gamefilter'] == '1':
-        gamefilter_query = gameid
+        gamefilter_query = '&' + gameid
     elif re.match(r'^\d+$', os.environ['gamefilter']):
-        gamefilter_query = f'game_id={ os.environ["gamefilter"] }'
+        gamefilter_query = f'&game_id={ os.environ["gamefilter"] }'
+    for filterItem in gamefilter_query.split('&'):
+        filterEntry = filterItem.split('=')
+        if filterEntry[0] == 'game_id':
+            gameidlist.append( str(filterEntry[1]) )
+    print(f'GAMEFILTER_QUERY={gamefilter_query}')
+
+if 'extension' in os.environ:
+    if re.search(r'&', os.environ['extension']):
+        extension_query = '' + '&'.join(
+           filter(
+              lambda attribute: re.match(r'^extension_id=[a-fA-F0-9]+', attribute),
+                map(
+                     lambda g: '='.join(map(
+                        lambda h: urllib.parse.quote(h),
+                        g.split('='))),
+                     os.environ['extension'].split('&')
+               )  #map
+           ) #filter
+        ) #join
+
 
 #url1 = 'https://api.twitch.tv/helix/streams?first=100&'+str(gameid)
 #print("Lookup request:" + url1)
@@ -63,7 +115,7 @@ while first_page or (pagination_string and len(pagination_string) > 0):
         pagination_query = ''
 
     lookup_url = ('https://api.twitch.tv/helix/extensions/live?'+
-          'extension_id=7nydnrue11053qmjc6g0fd6einj75p' + gamefilter_query + pagination_query)
+          extension_query + gamefilter_query + pagination_query)
 
     print(f"requests.get(\"{lookup_url}\")")
     lookup_request = requests.get(lookup_url,
@@ -85,9 +137,14 @@ while first_page or (pagination_string and len(pagination_string) > 0):
                 #
             #
             if outjson:
+                if len(gameidlist) > 0:
+                    j1["data"] = list(filter(lambda ei: str(ei["game_id"]) in gameidlist , j1["data"]))
                 print(json.dumps(j1, indent=3))
             else:
-                for item in j1["data"]:
+                for item in j1["data"]: 
+                    if len(gameidlist) > 0:
+                        if not( str(item["game_id"]) in gameidlist ):
+                            continue
                     print('%-20s  - %s %s' % ( item["broadcaster_name"], item["game_id"], item["game_name"]))
                     print('      - Title: %s' % (item["title"]))
                     print('      - Interact: %s' % (item["cclink"]))
