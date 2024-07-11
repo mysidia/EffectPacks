@@ -107,7 +107,8 @@ while (first_page or (pagination_string and len(pagination_string) > 0)):
     first_page = False
     current_page = current_page + 1
     if current_page > maximum_pagecount:
-         print(f'[Display limited to {maximum_pagecount} pages, {maximum_pagecount*100} entries]')
+         if not(outjson):
+             print(f'[Display limited to {maximum_pagecount} pages, {maximum_pagecount*100} entries]')
          break
     if pagination_string:
         pagination_query = f'&after={urllib.parse.quote(pagination_string)}'
@@ -117,7 +118,8 @@ while (first_page or (pagination_string and len(pagination_string) > 0)):
     lookup_url = ('https://api.twitch.tv/helix/extensions/live?'+
           extension_query + gamefilter_query + pagination_query)
 
-    print(f"requests.get(\"{lookup_url}\")")
+    if not(outjson):
+        print(f"requests.get(\"{lookup_url}\")")
     lookup_request = requests.get(lookup_url,
            headers = {'Client-ID' : client_id,  'Authorization' : 'Bearer ' +app_token})
     pagination_string = None
