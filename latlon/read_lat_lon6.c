@@ -36,11 +36,11 @@ int main(){
 		return 0;
 	}
 
-	unsigned char data[length*4];
+	unsigned char data[length*8];
 	data[0] = header[0];
 	data[1] = header[1];
 
-	if ( fread(data+2, sizeof(*data), length*4, fp) < length*4 ) {
+	if ( fread(data+2, sizeof(*data), length*8, fp) < length*8 ) {
 		perror("fread");
 		fclose(fp);
 		return -1;
