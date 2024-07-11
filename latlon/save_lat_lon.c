@@ -20,7 +20,7 @@ int main(){
 	int16_t latitude_converted, longitude_converted;
 	data[0] = (htons(length) >>8)&0xff;
 	data[1] = (htons(length)    )&0xff;
-	printf("Write length=$%.2X: [%.2x %.2x] to latlong.dat\n", length, data[0], data[1]);
+	printf("Write length=$%.2X: [%.2x %.2x] for latlong.dat\n", length, data[0], data[1]);
 
 	for(unsigned int i = 0; i < length; i++)
 	{
@@ -56,11 +56,11 @@ int main(){
         int error_flagged = 0;
 
         if (!fp) {
-                perror("fopen(latlong.dat,wb)");
+                perror("fopen(latlong.dat.new,wb)");
                 return -1;
         }
 	while ( flock(fileno(fp), LOCK_EX) == -1 ) {
-		perror("Error waiting for lock on latlong.dat");
+		perror("Error waiting for lock on latlong.dat.new");
 		fclose(fp);
 		return -1;
 	}
@@ -77,9 +77,9 @@ int main(){
 		perror("fwrite");
 	       	error_flagged = 1; /* write failed, but file is still open*/
 	}
-	if (fclose(fp) == -1) {
-		perror("fclose");
-		return -1;
+	if ( fflush(fp) == -1 ) {
+		perror("fflush() on lastlong.dat.new");
+		error_flagged = 1; /* failed to flush changes to disk */
 	}
 	if (error_flagged == 0){
 		if (rename("latlong.dat.new", "latlong.dat") == -1) {
@@ -89,6 +89,10 @@ int main(){
 		puts("Renamed latlong.dat.new to latlong.dat");
 	} else {
 		(void)unlink("latlong.dat.new");
+	}
+	if (fclose(fp) == -1) {
+		perror("fclose");
+		return -1;
 	}
 }
 
