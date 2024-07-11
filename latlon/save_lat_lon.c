@@ -1,5 +1,3 @@
-// Copyright C 2024 Mysidia  All Rights Reserved
-
 #include <stdio.h>
 #include <fcntl.h>
 #include <unistd.h>
@@ -72,6 +70,12 @@ int main(){
 		printf("%.2X ", data[j]);
 	}
 	puts("");*/
+	
+	printf("{\"pairlist\" : \"");
+	for(unsigned int i = 0; i < length*4+2; i++) {
+	   printf("%.2X", data[i]);
+	}
+	printf("\"}\n");
 
 	if ( fwrite(data, sizeof(*data), length*4+2, fp) < length*4+2) {
 		perror("fwrite");
@@ -96,6 +100,4 @@ int main(){
 	}
 }
 
-
-
-
+//(C) Mysidia 2024
