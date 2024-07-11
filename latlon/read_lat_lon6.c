@@ -49,15 +49,15 @@ int main(){
 	
 	for(unsigned int i = 0; i < length ; i++) {
 		latitude_raw =   ntohl(
-                                   ((u_int32_t)data[2+4*i+3]  << 24) & 0xff000000
-                                 | ((u_int32_t)data[2+4*i+2]  << 16) & 0x00ff0000
-                                 | ((u_int32_t)data[2+4*i+1]  << 8)  & 0x0000ff00
-			         | ((u_int32_t)data[2+4*i+0]  <<0)   & 0x000000ff);
+                                   ((u_int32_t)data[2+8*i+3]  << 24) & 0xff000000
+                                 | ((u_int32_t)data[2+8*i+2]  << 16) & 0x00ff0000
+                                 | ((u_int32_t)data[2+8*i+1]  << 8)  & 0x0000ff00
+			         | ((u_int32_t)data[2+8*i+0]  <<0)   & 0x000000ff);
 		longitude_raw =  ntohl(
-                                   (data[2+4*i+7]  << 24) & 0xff000000
-                                 | (data[2+4*i+6]  << 16) & 0x00ff0000
-                                 | (data[2+4*i+5]  << 8)  & 0x0000ff00
-			         | ((u_int32_t)data[2+4*i+4]  <<0) & 0x000000ff);
+                                   (data[2+8*i+7]  << 24) & 0xff000000
+                                 | (data[2+8*i+6]  << 16) & 0x00ff0000
+                                 | (data[2+8*i+5]  << 8)  & 0x0000ff00
+			         | ((u_int32_t)data[2+8*i+4]  <<0) & 0x000000ff);
 		printf("pair#%d :  lat=%Lf  lon=%Lf\n", i, (latitude_raw)/(long double)11900000.0,(longitude_raw)/(long double)11900000.0);
 	}
 }

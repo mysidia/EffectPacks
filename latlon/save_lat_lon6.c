@@ -40,18 +40,18 @@ int main(){
 
 		latitude_converted = htonl(latitude_converted);
 		longitude_converted = htonl(longitude_converted);
-		data[2+4*i+0] =   ( ((u_int32_t)latitude_converted)  >>0   ) & 0xff;
-                data[2+4*i+1] =   ( ((u_int32_t)latitude_converted)  >>8   ) & 0xff;
-                data[2+4*i+2] =   ( ((u_int32_t)latitude_converted)  >>16  ) & 0xff;
-                data[2+4*i+3] =   ( ((u_int32_t)latitude_converted)  >>24  ) & 0xff;
+		data[2+8*i+0] =   ( ((u_int32_t)latitude_converted)  >>0   ) & 0xff;
+                data[2+8*i+1] =   ( ((u_int32_t)latitude_converted)  >>8   ) & 0xff;
+                data[2+8*i+2] =   ( ((u_int32_t)latitude_converted)  >>16  ) & 0xff;
+                data[2+8*i+3] =   ( ((u_int32_t)latitude_converted)  >>24  ) & 0xff;
 
-		data[2+4*i+4] =   ( ((u_int32_t)longitude_converted) >>0   ) & 0xff;
-		data[2+4*i+5] =   ( ((u_int32_t)longitude_converted) >>8   ) & 0xff;
-                data[2+4*i+6] =   ( ((u_int32_t)longitude_converted) >>16  ) & 0xff;
-                data[2+4*i+7] =   ( ((u_int32_t)longitude_converted) >>24  ) & 0xff;
+		data[2+8*i+4] =   ( ((u_int32_t)longitude_converted) >>0   ) & 0xff;
+		data[2+8*i+5] =   ( ((u_int32_t)longitude_converted) >>8   ) & 0xff;
+                data[2+8*i+6] =   ( ((u_int32_t)longitude_converted) >>16  ) & 0xff;
+                data[2+8*i+7] =   ( ((u_int32_t)longitude_converted) >>24  ) & 0xff;
 		                printf("write raw [%.2X %.2X %.2X %.2X %.2X %.2X %.2X %.2X]: %Lf->%d %Lf->%d\n",
-						data[2+4*i+0], data[2+4*i+1], data[2+4*i+2], data[2+4*i+3],
-						data[2+4*i+4], data[2+4*i+5], data[2+4*i+6], data[2+4*i+7],
+						data[2+8*i+0], data[2+8*i+1], data[2+8*i+2], data[2+8*i+3],
+						data[2+8*i+4], data[2+8*i+5], data[2+8*i+6], data[2+8*i+7],
                                         latitude_float, latitude_converted, longitude_float, longitude_converted);
 	}
 
