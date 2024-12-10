@@ -14,7 +14,7 @@ MarkupSafe==2.1.3
 numpy==1.26.1
 packaging==23.2
 parse==1.20.0
-pillow==10.2.0
+pillow==10.3.0
 pyaml==23.9.7
 pycparser==2.21
 pyinstaller==6.4.0
