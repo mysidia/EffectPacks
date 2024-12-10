@@ -21,7 +21,7 @@ pyinstaller==6.4.0
 pyinstaller-extractor==1.0.3
 pyinstaller-hooks-contrib==2024.1
 PyYAML==6.0.1
-requests==2.31.0
+requests==2.32.0
 segno==1.6.1
 six==1.16.0
 spark-parser==1.8.9
